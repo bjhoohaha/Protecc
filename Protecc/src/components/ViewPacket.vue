@@ -1,26 +1,63 @@
-<!-- <template>
+<template>
   <div id="view-packet">
     <ul class="collection with-header">
-      <li class="collection-header">
-        <h4>Packet Number : {{ number }}</h4>
+      <li class="collection-header">Packet Name : {{ id }}</li>
+      <li class="collection-item">JSON : {{ packet }}</li>
+      <li class="collection-item">Created At : {{ packet.createdAt }}</li>
+      <li class="collection-item">Packet Source : {{ packet.sourceIp }}</li>
+      <li class="collection-item">
+        Packet Destination : {{ packet.destinationIp }}
       </li>
-      <li class="collection-item">Time (After 1st packet) :{{ time }}</li>
-      <li class="collection-item">Packet Source : {{ source }}</li>
-      <li class="collection-item">Packet Protocol : {{ protocol }}</li>
-      <li class="collection-item">Packet Destination : {{ destination }}</li>
-      <li class="collection-item">Packet length : {{ length }}</li>
-      <li class="collection-item">Packet info : {{ info }}</li>
+      <li class="collection-item">Packet Protocol : {{ packet.protocol }}</li>
+      <li class="collection-item">Packet length : {{ packet.length }}</li>
+      <li class="collection-item">Packet info : {{ packet.info }}</li>
     </ul>
-    <button @click="deletePacket" class="btn red">
-      Delete this Packet!!! (safe)
+    <!-- <router-link to="/" -->
+    <button @click="goBack()" class="btn btn-danger">
+      Back
     </button>
+    <button @click="deletePacket(packet['.key'])" class="btn btn-danger">
+      Delete
+    </button>
+    <!-- </router-link> -->
   </div>
 </template>
 
 <script>
-import db from './firebaseInit'
-var starCountRef = db.ref('packets')
-starCountRef.on('value', function(snapshot) {
-  console.log(snapshot)
-})
-</script> -->
+import { FirebaseInit } from '../store'
+// pointer to firebase databse
+const db = FirebaseInit.db
+export default {
+  name: 'view-packet',
+  props: ['id'],
+  data () {
+    return {
+      packet: {}
+      // bind as object
+      // packet: this.packet
+    }
+  },
+  firebase: {
+    packet: db.ref(
+      'packets/' +
+        // this.id +
+        window.location.href.substring(
+          window.location.href.lastIndexOf('/') + 1
+        )
+    )
+  },
+  methods: {
+    goBack () {
+      this.$router.back()
+    },
+    deletePacket (key) {
+      if (confirm('Confirm?')) {
+        db.ref('packets')
+          .child(key)
+          .remove()
+        this.$router.push('/')
+      }
+    }
+  }
+}
+</script>
