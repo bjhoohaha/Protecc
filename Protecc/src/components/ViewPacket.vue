@@ -32,29 +32,33 @@ export default {
   props: ['id'],
   data () {
     return {
-      packet: {}
       // bind as object
-      // packet: this.packet
+      packet: {}
     }
   },
   firebase: {
+    // reference to db
     packet: db.ref(
       'packets/' +
-        // this.id +
+        // get current path from URL
+        // somehow wasnt able to implement this.$routes.params.id
         window.location.href.substring(
           window.location.href.lastIndexOf('/') + 1
         )
     )
   },
   methods: {
+    // go back for back button
     goBack () {
       this.$router.back()
     },
     deletePacket (key) {
+      // prompt user to confirm
       if (confirm('Confirm?')) {
         db.ref('packets')
           .child(key)
           .remove()
+        // redirect back after packet is deleted
         this.$router.push('/')
       }
     }
