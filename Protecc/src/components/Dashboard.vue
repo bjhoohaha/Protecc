@@ -7,7 +7,7 @@
       <li v-for="packet in packets" class="collection-item" >
         <router-link class="secondary-content"
                      v-bind:to="{ name: 'view-packet',
-                                  params: {id: packet['.key']}}">
+                                  params: {id: packet['.key'], packet: packet}}">
           <i class="fa fa-eye fa-lg"></i>
         </router-link>
         <div class = "chip"> {{ packet.sourceIp }} </div> >

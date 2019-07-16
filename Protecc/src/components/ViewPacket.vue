@@ -29,23 +29,10 @@ import { FirebaseInit } from '../store'
 const db = FirebaseInit.db
 export default {
   name: 'view-packet',
-  props: ['id'],
+  // pass the packet from Dashboard.vue as props
+  props: ['id', 'packet'],
   data () {
-    return {
-      // bind as object
-      packet: {}
-    }
-  },
-  firebase: {
-    // reference to db
-    packet: db.ref(
-      'packets/' +
-        // get current path from URL
-        // somehow wasnt able to implement this.$routes.params.id
-        window.location.href.substring(
-          window.location.href.lastIndexOf('/') + 1
-        )
-    )
+    return {}
   },
   methods: {
     // go back for back button
