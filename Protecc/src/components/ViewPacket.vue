@@ -12,14 +12,12 @@
       <li class="collection-item">Packet length : {{ packet.length }}</li>
       <li class="collection-item">Packet info : {{ packet.info }}</li>
     </ul>
-    <!-- <router-link to="/" -->
     <button @click="goBack()" class="btn btn-danger">
       Back
     </button>
     <button @click="deletePacket(packet['.key'])" class="btn btn-danger">
       Delete
     </button>
-    <!-- </router-link> -->
   </div>
 </template>
 
@@ -46,7 +44,7 @@ export default {
           .child(key)
           .remove()
         // redirect back after packet is deleted
-        this.$router.push('/')
+        this.$router.push('/home')
       }
     }
   }

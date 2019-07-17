@@ -19,6 +19,8 @@
     "vuetify": "^1.5.5"
   },
   "devDependencies": {
+    "@fortawesome/fontawesome-free": "^5.9.0",
+    "@mdi/font": "^3.8.95",
     "autoprefixer": "^7.1.2",
     "babel-core": "^6.22.1",
     "babel-eslint": "^8.2.1",

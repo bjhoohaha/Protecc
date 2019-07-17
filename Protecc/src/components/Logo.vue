@@ -25,7 +25,7 @@ export default {
   name: 'logo'
 }
 </script>
-<style>
+<style scoped>
 #protecc-title {
   font-family: 'Bungee Shade';
   font-size: 8vw;

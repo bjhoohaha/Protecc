@@ -5,21 +5,25 @@ import Dashboard from '@/components/Dashboard'
 import NewPacket from '@/components/NewPacket'
 import PacketStats from '@/components/PacketStats'
 import ViewPacket from '@/components/ViewPacket'
+import Login from '@/components/Login.vue'
+import SignUp from '@/components/SignUp.vue'
 
 Vue.use(Router)
 
 export default new Router({
   routes: [
     // test route
-    // {
-    //   path: '/HelloWorld',
-    //   name: 'hello-world',
-    //   component: HelloWorld
-    // },
+    {
+      path: '/HelloWorld',
+      name: 'hello-world',
+      component: HelloWorld
+    },
+    // both path / and /home will reach dashboard
     {
       path: '/',
       name: 'dashboard',
-      component: Dashboard
+      component: Dashboard,
+      alias: '/home'
     },
     // route to start and stop new packets
     {
@@ -39,6 +43,16 @@ export default new Router({
       name: 'view-packet',
       component: ViewPacket,
       props: true
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: Login
+    },
+    {
+      path: '/sign-up',
+      name: 'sign-up',
+      component: SignUp
     }
   ],
   mode: 'history'
