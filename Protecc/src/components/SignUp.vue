@@ -92,16 +92,15 @@ export default {
     source: String
   },
   methods: {
-    signUp () {
+    signUp: function () {
       // pointer to outside this
       const self = this
-      if (this.validateAll()) {
+      if (this.validateAll) {
         // reference email and password from data()
         auth.createUserWithEmailAndPassword(this.email, this.password).then(
           function (result) {
-            console.log(result)
             // redirect
-            self.$router.push('/login')
+            self.$router.push('/')
           },
           function (err) {
             self.bounce = true
@@ -110,9 +109,11 @@ export default {
           }
         )
       }
-    },
+    }
+  },
+  computed: {
     // validations for input
-    validateAll () {
+    validateAll: function () {
       this.missing =
         this.email.length == 0 ||
         this.password.length == 0 ||

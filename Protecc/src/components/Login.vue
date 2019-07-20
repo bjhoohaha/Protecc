@@ -10,6 +10,10 @@
                 <v-toolbar-title>Protecc</v-toolbar-title>
                 <v-spacer></v-spacer>
               </v-toolbar>
+              <!-- alert -->
+              <v-alert v-bind:value="alert" dismissible type="error">
+                {{ error }}</v-alert
+              >
               <!-- options for email or google login -->
               <p v-if="loginWithEmail">
                 <br />
@@ -88,6 +92,8 @@ export default {
     // toggle overlay true or false
     dialog: true,
     loginWithEmail: true,
+    alert: false,
+    error: '',
     email: '',
     password: ''
   }),
@@ -96,50 +102,43 @@ export default {
   },
   methods: {
     // authenticate firebase login with email and password
-    login () {
-      const self = this
+    login: function () {
       auth.signInWithEmailAndPassword(this.email, this.password).then(
-        function (user) {
-          console.log('You have been logged in')
-          self.dialog = false
-          self.$router.push('/')
+        result => {
+          alert('You have been logged in')
+          this.$store.commit('setUser', result.user.uid)
+          this.dialog = false
+          this.$router.replace('/')
+          // console.log(this.$store.getters.getUser)
         },
-        function (err) {
-          alert(err.message)
+        err => {
+          this.alert = true
+          this.err = err.message
         }
       )
     },
     // authenticate google login
-    googleLogin () {
+    googleLogin: function () {
       const provider = new FirebaseInit.fb.auth.GoogleAuthProvider()
-      const self = this
       // sign in with popup
       auth.signInWithPopup(provider).then(
-        function (result) {
-          console.log(result)
-          alert(result.user.displayName + ' has logged in')
-          self.dialog = false
-          self.$router.push('/')
+        result => {
+          // console.log(result)
+          const displayName =
+            result.user.displayName == null
+              ? 'You have'
+              : result.user.displayName + ' has'
+          alert(displayName + ' logged in')
+          this.$store.dispatch('updateUser', result.user.uid)
+          this.dialog = false
+          this.$router.replace('/')
+          console.log(this.$store.getters.getUser)
         },
-        function (err) {
-          alert('Error : ' + err.message)
+        err => {
+          this.alert = true
+          this.error = err.message
         }
       )
-      //       sign in with redirect
-      // =================================
-      // auth.signInWithRedirect(provider)
-      // auth.getRedirectResult().then(
-      //   function (result) {
-      //     console.log(result)
-      //     alert(' has logged in')
-      //     self.dialog = false
-      //     self.$router.push('/')
-      //   },
-      //   function (err) {
-      //     alert('Error : ' + err.message)
-      //   }
-      // )
-      // ===================================
     }
   }
 }

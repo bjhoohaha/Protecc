@@ -7,10 +7,12 @@ import PacketStats from '@/components/PacketStats'
 import ViewPacket from '@/components/ViewPacket'
 import Login from '@/components/Login.vue'
 import SignUp from '@/components/SignUp.vue'
+import { FirebaseInit } from '../store'
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
+  mode: 'history',
   routes: [
     // test route
     {
@@ -23,7 +25,10 @@ export default new Router({
       path: '/',
       name: 'dashboard',
       component: Dashboard,
-      alias: '/home'
+      alias: '/home',
+      meta: {
+        requiresAuth: true
+      }
     },
     // route to start and stop new packets
     {
@@ -35,14 +40,20 @@ export default new Router({
     {
       path: '/stats',
       name: 'packet-stats',
-      component: PacketStats
+      component: PacketStats,
+      meta: {
+        requiresAuth: true
+      }
     },
     // route to view more packet information
     {
       path: '/view/:id',
       name: 'view-packet',
       component: ViewPacket,
-      props: true
+      props: true,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: '/login',
@@ -54,6 +65,20 @@ export default new Router({
       name: 'sign-up',
       component: SignUp
     }
-  ],
-  mode: 'history'
+  ]
 })
+
+const auth = FirebaseInit.auth
+
+router.beforeEach((to, from, next) => {
+  const currentUser = auth.currentUser
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
+  // console.log(requiresAuth)
+  // console.log(currentUser)
+  // console.log(!!currentUser)
+  // next()
+  if (requiresAuth && !currentUser) next('login')
+  else next()
+})
+
+export default router

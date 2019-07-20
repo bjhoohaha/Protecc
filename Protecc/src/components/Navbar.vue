@@ -3,6 +3,8 @@
     <v-tabs background color="pink lighten-1" dark>
       <v-tab to="/home"> Home </v-tab>
       <v-tab to="/stats"> Stats </v-tab>
+      <v-spacer></v-spacer>
+      <v-tab @click="signOut"> Sign Out </v-tab>
     </v-tabs>
   </div>
 </template>
@@ -13,11 +15,21 @@
 }
 </style>
 <script>
+import { FirebaseInit } from '../store'
+const auth = FirebaseInit.auth
 export default {
   name: 'navbar',
   data () {
     return {
       overlay: false
+    }
+  },
+  methods: {
+    signOut: function () {
+      auth.signOut().then(() => {
+        alert('You are signed out!')
+        this.$router.replace('/login')
+      })
     }
   }
 }
