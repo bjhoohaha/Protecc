@@ -190,7 +190,8 @@ function dateFrequencyData () {
       currentDate.setDate(currentDate.getDate() + 1)
     ) {
       this.arr.push(0)
-      this.label.push(this.toDateString(currentDate))
+      const labelDate = new Date(currentDate.getTime() + 86400000)
+      this.label.push(this.toDateString(labelDate))
     }
   }
   // format date to date string
