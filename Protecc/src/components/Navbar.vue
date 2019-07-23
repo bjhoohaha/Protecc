@@ -25,6 +25,7 @@ export default {
     }
   },
   methods: {
+    // signOut -> user have to sign in again
     signOut: function () {
       auth.signOut().then(() => {
         alert('You are signed out!')

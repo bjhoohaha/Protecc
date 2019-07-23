@@ -106,10 +106,8 @@ export default {
       auth.signInWithEmailAndPassword(this.email, this.password).then(
         result => {
           alert('You have been logged in')
-          this.$store.commit('setUser', result.user.uid)
           this.dialog = false
           this.$router.replace('/')
-          // console.log(this.$store.getters.getUser)
         },
         err => {
           this.alert = true
@@ -129,10 +127,8 @@ export default {
               ? 'You have'
               : result.user.displayName + ' has'
           alert(displayName + ' logged in')
-          this.$store.dispatch('updateUser', result.user.uid)
           this.dialog = false
           this.$router.replace('/')
-          console.log(this.$store.getters.getUser)
         },
         err => {
           this.alert = true

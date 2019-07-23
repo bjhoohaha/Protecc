@@ -5,15 +5,17 @@
         <h4>My Current flagged packets</h4>
       </li>
       <li
-        v-bind:key="packet['.key']"
-        v-for="packet in packets"
+        v-bind:key="packet.key"
+        v-for="packet in getDatabase"
         class="collection-item"
       >
         <router-link
           class="secondary-content"
           v-bind:to="{
             name: 'view-packet',
-            params: { id: packet['.key'], packet: packet }
+            params: {
+              id: packet.key
+            }
           }"
         >
           <i class="fa fa-eye fa-lg"> </i>
@@ -39,22 +41,25 @@
 </template>
 
 <script>
-import { FirebaseInit } from '../store'
+import Vue from 'vue'
+import { FirebaseInit, store } from '../store'
 // pointer to firebase databse
 const db = FirebaseInit.db
+const ref = db.ref('packets').orderByChild('createdAt')
+
 // export componenet dashboard
 export default {
   name: 'dashboard',
   data () {
     return {
-      // packets will refer to this.$firebase.packets
-      // binded using VueFire
-      packets: []
+      packets: this.$store.getters.getDatabase
     }
   },
-  firebase: {
-    // bind using VueFire
-    packets: db.ref('packets')
+  computed: {
+    getDatabase () {
+      // retrieve database
+      return this.$store.getters.getDatabase
+    }
   }
 }
 </script>

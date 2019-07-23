@@ -1,8 +1,6 @@
 <template>
   <v-app>
     <div id="app">
-      <!-- if using login as overlay -->
-      <!-- <Login /> -->
       <Logo />
       <Navbar />
       <v-content>
@@ -13,9 +11,11 @@
 </template>
 
 <script>
+import { FirebaseInit } from './store'
 import Login from './components/Login.vue'
 import Logo from './components/Logo.vue'
 import Navbar from './components/Navbar.vue'
+const db = FirebaseInit.db
 export default {
   name: 'App',
   data () {
@@ -25,6 +25,40 @@ export default {
     Logo,
     Navbar,
     Login
+  },
+  created () {
+    const ref = db.ref('packets')
+    ref
+      .once('value')
+      .then(snapshot => {
+        // if reference to table 'packets' exists
+        // commit to Vuex Store
+        if (snapshot.exists()) {
+          console.log('initialised')
+          snapshot.forEach(childSnapshot => {
+            const packet = childSnapshot.val()
+            packet.key = childSnapshot.key
+            // add packet to store
+            this.$store.commit('addPacket', packet)
+          })
+        }
+      })
+      .then(() => {
+        // listen in on new packets added
+        // apply functions on the last one
+        ref.limitToLast(1).on('child_added', snapshot => {
+          console.log('added')
+          if (snapshot.exists()) {
+            const packet = snapshot.val()
+            packet.key = snapshot.key
+            // add packet to store
+            this.$store.commit('addPacket', packet)
+          }
+        })
+      })
+  },
+  beforeCreate () {
+    this.$store.dispatch('update')
   }
 }
 </script>

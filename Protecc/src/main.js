@@ -5,17 +5,13 @@ import { FirebaseInit } from './store'
 import './plugins/vuetify'
 import { rtdbPlugin } from 'vuefire'
 import App from './App.vue'
-import VueRouter from 'vue-router'
 import Vuetify from 'vuetify'
 import router from './router'
-import Vuex from 'vuex'
 // store is property in './store/index.js'
 import { store } from './store'
 
 Vue.use(rtdbPlugin)
-Vue.use(VueRouter)
 Vue.use(Vuetify)
-Vue.use(Vuex)
 Vue.config.productionTip = false
 
 let app = ''
