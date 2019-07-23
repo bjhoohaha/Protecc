@@ -46,10 +46,10 @@ export default {
       // prompt user to confirm
       if (confirm('Confirm?')) {
         db.ref('packets')
-          .child(this.packet.key)
+          .child(this.getPacket.key)
           .remove()
         // update Vuex when packet is deleted
-        this.$store.commit('deletePacket', this.packet)
+        this.$store.commit('deletePacket', this.getPacket)
         // redirect back after packet is deleted
         this.$router.push('/home')
       }
