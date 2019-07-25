@@ -1,0 +1,31 @@
+{
+  "name": "protecc",
+  "version": "1.0.0",
+  "description": "Network Intrusion Detection System",
+  "main": "index.js",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "firebase": "^6.3.1",
+    "firebase-admin": "^8.3.0",
+    "morgan": "^1.9.1",
+    "nodemon": "^1.19.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bjhoohaha/Protecc.git"
+  },
+  "author": "Ong Bing Jue & Tishya Khanna",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bjhoohaha/Protecc/issues"
+  },
+  "homepage": "https://github.com/bjhoohaha/Protecc#readme"
+}

@@ -7,7 +7,7 @@ import PacketStats from '@/components/PacketStats'
 import ViewPacket from '@/components/ViewPacket'
 import Login from '@/components/Login.vue'
 import SignUp from '@/components/SignUp.vue'
-import { FirebaseInit } from '../store'
+import firebase from '../firebase'
 
 Vue.use(Router)
 
@@ -34,7 +34,10 @@ const router = new Router({
     {
       path: '/new',
       name: 'new-packet',
-      component: NewPacket
+      component: NewPacket,
+      meta: {
+        requiresAuth: true
+      }
     },
     // route to collect stats and data analytics
     {
@@ -68,7 +71,7 @@ const router = new Router({
   ]
 })
 
-const auth = FirebaseInit.auth
+const auth = firebase.auth
 
 router.beforeEach((to, from, next) => {
   const currentUser = auth.currentUser

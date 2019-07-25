@@ -84,8 +84,8 @@
   </div>
 </template>
 <script>
-import { FirebaseInit } from '../store'
-const auth = FirebaseInit.auth
+import firebase from '../firebase'
+const auth = firebase.auth
 export default {
   name: 'Login',
   data: () => ({
@@ -117,7 +117,7 @@ export default {
     },
     // authenticate google login
     googleLogin: function () {
-      const provider = new FirebaseInit.fb.auth.GoogleAuthProvider()
+      const provider = new firebase.fb.auth.GoogleAuthProvider()
       // sign in with popup
       auth.signInWithPopup(provider).then(
         result => {

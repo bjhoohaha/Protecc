@@ -23,6 +23,11 @@ export default {
           ],
           xAxes: [
             {
+              // x axis as time
+              type: 'time',
+              time: {
+                unit: 'day'
+              },
               ticks: {
                 beginAtZero: true,
                 display: false

@@ -15,8 +15,8 @@
 }
 </style>
 <script>
-import { FirebaseInit } from '../store'
-const auth = FirebaseInit.auth
+import firebase from '../firebase'
+const auth = firebase.auth
 export default {
   name: 'navbar',
   data () {

@@ -29,19 +29,30 @@
 </template>
 
 <script>
+import firebase from '../firebase'
 import BarChart from './BarChart.vue'
 import LineChart from './LineChart.vue'
 import DoughnutChart from './DoughnutChart.vue'
 
+const db = firebase.db
 export default {
   name: 'packet-stats',
   data () {
-    return {}
+    return {
+      dateData: {},
+      protocolData: {},
+      lengthData: {}
+    }
   },
   components: {
     BarChart,
     LineChart,
     DoughnutChart
+  },
+  firebase: {
+    dateData: db.ref('stats/date'),
+    protocolData: db.ref('stats/protocol'),
+    lengthData: db.ref('stats/length')
   },
   computed: {
     // test data set
@@ -67,28 +78,45 @@ export default {
     },
     getProtocolData: function () {
       return {
-        labels: this.$store.getters.getProtocolLabel,
+        labels: Object.keys(this.protocolData),
         datasets: [
           {
             label: 'Packet Count',
             backgroundColor: [
               '#EF9A9A',
               '#F48FB1',
+              '#CE93D8',
               '#B39DDB',
+              '#9FA8DA',
               '#90CAF9',
+              '#81D4FA',
+              '#80DEEA',
               '#80CBC4',
+              '#A5D6A7',
+              '#C5E1A5',
+              '#E6EE9C',
               '#FFF59D',
+              '#FFE082',
+              '#FFCC80',
               '#FFAB91',
-              '#BCAAA4'
+              '#BCAAA4',
+              '#B0BEC5'
             ],
-            data: this.$store.getters.getProtocolData
+            data: Object.values(this.protocolData)
           }
         ]
       }
     },
     getLengthData: function () {
       return {
-        labels: this.$store.getters.getLengthLabel,
+        labels: [
+          '0-100',
+          '100-200',
+          '200-500',
+          '500-1000',
+          '1000-1500',
+          '> 1500'
+        ],
         datasets: [
           {
             label: 'Packet Count',
@@ -100,14 +128,14 @@ export default {
               '#80CBC4',
               '#FFF59D'
             ],
-            data: this.$store.getters.getLengthData
+            data: Object.values(this.lengthData)
           }
         ]
       }
     },
     getDateData: function () {
       return {
-        labels: this.$store.getters.getDateLabel,
+        labels: Object.keys(this.dateData),
         datasets: [
           {
             label: 'Packet Count',
@@ -116,7 +144,7 @@ export default {
             pointHoverBorderColor: '#2E7D32',
             pointHoverBorderWidth: 3,
             fill: false,
-            data: this.$store.getters.getDateData
+            data: Object.values(this.dateData)
           }
         ]
       }

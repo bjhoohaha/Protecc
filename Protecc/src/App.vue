@@ -11,11 +11,12 @@
 </template>
 
 <script>
-import { FirebaseInit } from './store'
+import firebase from './firebase'
 import Login from './components/Login.vue'
 import Logo from './components/Logo.vue'
 import Navbar from './components/Navbar.vue'
-const db = FirebaseInit.db
+
+const db = firebase.db
 export default {
   name: 'App',
   data () {
@@ -27,38 +28,19 @@ export default {
     Login
   },
   created () {
-    const ref = db.ref('packets')
-    ref
-      .once('value')
-      .then(snapshot => {
-        // if reference to table 'packets' exists
-        // commit to Vuex Store
-        if (snapshot.exists()) {
-          console.log('initialised')
-          snapshot.forEach(childSnapshot => {
-            const packet = childSnapshot.val()
-            packet.key = childSnapshot.key
-            // add packet to store
-            this.$store.commit('addPacket', packet)
-          })
-        }
-      })
-      .then(() => {
-        // listen in on new packets added
-        // apply functions on the last one
-        ref.limitToLast(1).on('child_added', snapshot => {
-          console.log('added')
-          if (snapshot.exists()) {
-            const packet = snapshot.val()
-            packet.key = snapshot.key
-            // add packet to store
-            this.$store.commit('addPacket', packet)
-          }
-        })
-      })
-  },
-  beforeCreate () {
+    let count = 0
     this.$store.dispatch('update')
+    const ref = db.ref('packets')
+    ref.limitToLast(1).on('child_added', snapshot => {
+      if (snapshot.exists() && count > 0) {
+        console.log('added')
+        console.log(snapshot.val())
+        const packet = snapshot.val()
+        this.$store.dispatch('updateStats', packet)
+      }
+      count++
+    })
+    console.log('listening')
   }
 }
 </script>
