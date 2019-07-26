@@ -31,13 +31,6 @@
         Info: {{ packet.info }} <br />
       </li>
     </ul>
-
-    <div class="fixed-action-btn">
-      <router-link to="/new" class="btn-floating btn-large green">
-        New
-        <i class="fa fa-arrow"></i>
-      </router-link>
-    </div>
   </div>
 </template>
 

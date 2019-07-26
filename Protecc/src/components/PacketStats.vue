@@ -9,22 +9,64 @@
           <!-- Bind date data to chart data -->
           <LineChart v-bind:chartData="getDateData" />
           <br />
+          <!-- table for dates -->
+          <v-data-table
+            :headers="dateHeader"
+            v-bind:items="dateTableValues"
+            item-key="date"
+          >
+            <template v-slot:items="props">
+              <td class="text-xs-right">{{ props.item.date }}</td>
+              <td class="text-xs-right">{{ props.item.count }}</td>
+            </template>
+          </v-data-table>
         </v-flex>
         <v-flex xs2 md3 lg2 />
       </v-layout>
+      <br />
+      <v-divider light insert />
       <v-layout>
         <!-- Displays packet count on different packet length -->
         <v-flex xs6>
           <!-- Bind length data to chart data -->
           <BarChart v-bind:chartData="getLengthData" />
+          <!-- table for length -->
+          <v-data-table
+            :headers="lengthHeader"
+            v-bind:items="lengthTableValues"
+            item-key="date"
+          >
+            <template v-slot:items="props">
+              <td class="text-xs-right">{{ props.item.length }}</td>
+              <td class="text-xs-right">{{ props.item.count }}</td>
+            </template>
+          </v-data-table>
         </v-flex>
+        <v-divider vertical />
+        <v-divider vertical />
         <!-- Displays packet count of different protocol -->
         <v-flex xs6>
           <!-- Bind protocol data to chart data -->
           <DoughnutChart v-bind:chartData="getProtocolData" />
+          <!-- table for count -->
+          <v-data-table
+            :headers="protocolHeader"
+            v-bind:items="protocolTableValues"
+            item-key="date"
+          >
+            <template v-slot:items="props">
+              <td class="text-xs-right">{{ props.item.protocol }}</td>
+              <td class="text-xs-right">{{ props.item.count }}</td>
+            </template>
+          </v-data-table>
         </v-flex>
       </v-layout>
     </v-container>
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
   </div>
 </template>
 
@@ -41,7 +83,32 @@ export default {
     return {
       dateData: {},
       protocolData: {},
-      lengthData: {}
+      lengthData: {},
+      dateHeader: [
+        {
+          text: 'Date',
+          align: 'left',
+          value: 'date'
+        },
+        { text: 'Count', value: 'count' }
+      ],
+      lengthHeader: [
+        {
+          text: 'Length',
+          align: 'left',
+          sortable: false,
+          value: 'length'
+        },
+        { text: 'Count', sortable: false, value: 'count' }
+      ],
+      protocolHeader: [
+        {
+          text: 'Protocol',
+          align: 'left',
+          value: 'protocol'
+        },
+        { text: 'Count', value: 'count' }
+      ]
     }
   },
   components: {
@@ -55,26 +122,20 @@ export default {
     lengthData: db.ref('stats/length')
   },
   computed: {
-    // test data set
-    getData: function () {
-      return {
-        labels: [
-          'January',
-          'February',
-          'March',
-          'April',
-          'May',
-          'June',
-          'July'
-        ],
-        datasets: [
-          {
-            label: 'Data One',
-            backgroundColor: 'rgba(10, 255, 255, 0.1)',
-            data: [10, 20, 30, 40, 50, 60, 70]
-          }
-        ]
-      }
+    protocolTableValues: function () {
+      return Object.entries(this.protocolData).map(entry => {
+        return { protocol: entry[0], count: entry[1] }
+      })
+    },
+    lengthTableValues: function () {
+      return Object.entries(this.lengthData).map(entry => {
+        return { length: entry[0], count: entry[1] }
+      })
+    },
+    dateTableValues: function () {
+      return Object.entries(this.dateData).map(entry => {
+        return { date: entry[0], count: entry[1] }
+      })
     },
     getProtocolData: function () {
       return {

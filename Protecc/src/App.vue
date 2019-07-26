@@ -6,6 +6,7 @@
       <v-content>
         <router-view />
       </v-content>
+      <NewPacket />
     </div>
   </v-app>
 </template>
@@ -15,6 +16,7 @@ import firebase from './firebase'
 import Login from './components/Login.vue'
 import Logo from './components/Logo.vue'
 import Navbar from './components/Navbar.vue'
+import NewPacket from './components/NewPacket.vue'
 
 const db = firebase.db
 export default {
@@ -25,7 +27,8 @@ export default {
   components: {
     Logo,
     Navbar,
-    Login
+    Login,
+    NewPacket
   },
   created () {
     let count = 0

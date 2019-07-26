@@ -8,6 +8,9 @@ import os
 import datetime
 import subprocess
 # initialize credentials
+options= []
+# pass in arguments if required
+# options = ['-c', str(sys.argv[1])]
 cred = credentials.Certificate("/users/bj/Protecc/serviceAccountKey.json")
 firebase_admin.initialize_app(cred, {
     'databaseURL': 'https://employee-manager-66213.firebaseio.com'
@@ -50,9 +53,9 @@ firebase_admin.initialize_app(cred, {
 
 ################################################################################
 try:
-    sharkProcess = subprocess.Popen("tshark",stdout=subprocess.PIPE,
+    sharkProcess = subprocess.Popen(['tshark'] + options,stdout=subprocess.PIPE,
                                              stderr=subprocess.PIPE)
-    print("tshark is running...")
+    print("tshark is running...", file=sys.stdout)
     i = 0
     for packet in sharkProcess.stdout:
         # string is in binary, hence decode to utf-8

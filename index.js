@@ -19,18 +19,29 @@ let runPyrebase = null;
 
 app.post("/capture", function(req, res) {
   // spawn pyrebase
-  runPyrebase = spawn("python3", ["PyrebaseAdmin.py"]);
-  res.send("waiting");
-  runPyrebase.stdout.on("data", data => {
-    res.send("spawn success");
-  });
+  runPyrebase = spawn("python3", ["PyrebaseAdmin.py", req.body.params]);
   // send error if failed to spawn
   runPyrebase.on("error", err => {
-    res.status(500).send({ error: "tshark failed to spawn" });
+    res.status(500);
+    res.end();
+  });
+  // send error if script failed
+  runPyrebase.stderr.on("data", data => {
+    res.status(400);
+    res.end();
+  });
+  // send 200 OK if successful
+  runPyrebase.stdout.on("data", data => {
+    res.status(200);
+    res.end();
   });
 });
 
 app.delete("/capture", function(req, res) {
-  //send response after killed
-  runPyrebase.kill().then(res.send("tshark stopped"));
+  // send response after killed
+  try {
+    runPyrebase.kill().then(res.send("tshark stopped"));
+  } catch (err) {
+    console.log(err);
+  }
 });
