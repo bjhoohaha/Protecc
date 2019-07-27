@@ -39,9 +39,6 @@
     >
       STOP
     </v-btn>
-    <!-- <v-btn> START CAPTURE </v-btn>
-    <button @click="runTshark" class="btn">Start</button>
-    <button @click="killTshark" class="btn green">Stop</button> -->
   </div>
 </template>
 
@@ -63,10 +60,12 @@ export default {
     runTshark () {
       this.dialog = false
       this.capture = !this.capture
+      const uid = this.$store.getters.getUID
       // POST request to start logging packets
       return axios
         .post(url, {
-          params: '10'
+          params: '10',
+          uid: uid
         })
         .then(
           result => {

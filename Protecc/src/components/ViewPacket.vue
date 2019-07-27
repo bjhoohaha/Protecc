@@ -30,7 +30,7 @@ import firebase from '../firebase'
 const db = firebase.db
 export default {
   name: 'view-packet',
-  // pass the id from Dashboard.vue as props
+  // pass the id as props
   props: ['id'],
   data () {
     return {
@@ -52,8 +52,11 @@ export default {
     }
   },
   created () {
-    // bind packet with database using VueFire
-    this.$rtdbBind('packet', db.ref('packets/' + this.id))
+    const uid = firebase.auth.currentUser.uid
+    // bind packet to database info using VueFire
+    if (uid != null) {
+      this.$rtdbBind('packet', db.ref('users/' + uid + '/packets/' + this.id))
+    }
   }
 }
 </script>

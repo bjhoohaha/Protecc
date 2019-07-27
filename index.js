@@ -19,7 +19,8 @@ let runPyrebase = null;
 
 app.post("/capture", function(req, res) {
   // spawn pyrebase
-  runPyrebase = spawn("python3", ["PyrebaseAdmin.py", req.body.params]);
+  const uid = req.body.uid;
+  runPyrebase = spawn("python3", ["PyrebaseAdmin.py", uid]);
   // send error if failed to spawn
   runPyrebase.on("error", err => {
     res.status(500);

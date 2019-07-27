@@ -85,6 +85,7 @@
 </template>
 <script>
 import firebase from '../firebase'
+const db = firebase.db
 const auth = firebase.auth
 export default {
   name: 'Login',
@@ -101,12 +102,30 @@ export default {
     source: String
   },
   methods: {
+    // listen for new packets -> statistics
+    listen: function (uid) {
+      console.log(uid)
+      let count = 0
+      const ref = db.ref('users/' + uid + '/packets')
+      ref.limitToLast(1).on('child_added', snapshot => {
+        if (snapshot.exists() && count > 0) {
+          console.log('added')
+          console.log(snapshot.val())
+          const packet = snapshot.val()
+          this.$store.dispatch('updateStats', packet)
+        }
+        count++
+      })
+      console.log('listening')
+    },
     // authenticate firebase login with email and password
     login: function () {
       auth.signInWithEmailAndPassword(this.email, this.password).then(
         result => {
           alert('You have been logged in')
           this.dialog = false
+          // start listener
+          this.listen(result.user.uid)
           this.$router.replace('/')
         },
         err => {
@@ -128,6 +147,8 @@ export default {
               : result.user.displayName + ' has'
           alert(displayName + ' logged in')
           this.dialog = false
+          // start listener
+          this.listen(result.user.uid)
           this.$router.replace('/')
         },
         err => {

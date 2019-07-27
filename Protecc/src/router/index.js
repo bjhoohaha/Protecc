@@ -7,6 +7,7 @@ import PacketStats from '@/components/PacketStats'
 import ViewPacket from '@/components/ViewPacket'
 import Login from '@/components/Login.vue'
 import SignUp from '@/components/SignUp.vue'
+// import Settings from '@/components/Settings.vue'
 import firebase from '../firebase'
 
 Vue.use(Router)
@@ -68,18 +69,20 @@ const router = new Router({
       name: 'sign-up',
       component: SignUp
     }
+    // {
+    //   path: '/settings',
+    //   name: 'Settings',
+    //   component: Settings
+    // }
   ]
 })
 
 const auth = firebase.auth
 
+// check authentication for page before next
 router.beforeEach((to, from, next) => {
   const currentUser = auth.currentUser
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
-  // console.log(requiresAuth)
-  // console.log(currentUser)
-  // console.log(!!currentUser)
-  // next()
   if (requiresAuth && !currentUser) next('login')
   else next()
 })

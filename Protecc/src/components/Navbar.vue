@@ -4,6 +4,7 @@
       <v-tab to="/home"> Home </v-tab>
       <v-tab to="/stats"> Stats </v-tab>
       <v-spacer></v-spacer>
+      <v-tab to="/settings"> Settings </v-tab>
       <v-tab @click="signOut"> Sign Out </v-tab>
     </v-tabs>
   </div>
@@ -29,7 +30,7 @@ export default {
     signOut: function () {
       auth.signOut().then(() => {
         alert('You are signed out!')
-        this.$router.replace('/login')
+        this.$router.go('/login')
       })
     }
   }

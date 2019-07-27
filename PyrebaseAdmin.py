@@ -8,6 +8,7 @@ import os
 import datetime
 import subprocess
 # initialize credentials
+uid = sys.argv[1]
 options= []
 # pass in arguments if required
 # options = ['-c', str(sys.argv[1])]
@@ -75,7 +76,7 @@ try:
         # classifyProtocol(packetInfoArray[5])
         # classifyLength(packetInfoArray[6])
         # classifyDate(now)
-        db.reference('packets').push(data)
+        db.reference('users/' + uid + '/packets').push(data)
         i += 1
         print(str(i) + " packets added")
 except KeyboardInterrupt:

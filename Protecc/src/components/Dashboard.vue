@@ -4,6 +4,7 @@
       <li class="collection-header">
         <h4>My Current flagged packets</h4>
       </li>
+      <!--  Display each packet in list -->
       <li
         v-bind:key="key"
         v-for="(packet, key) in packets"
@@ -15,14 +16,12 @@
             name: 'view-packet',
             params: {
               id: key
-              /* packet: packet */
             }
           }"
         >
           <i class="fa fa-eye fa-lg"> </i>
         </router-link>
         <div class="chip">{{ packet.sourceIp }}</div>
-        >
         <div class="chip">{{ packet.destinationIp }}</div>
         <br />
         {{ packet.createdAt }} <br />
@@ -36,11 +35,13 @@
 
 <script>
 import Vue from 'vue'
+import store from '../store'
 import firebase from '../firebase'
-console.log(firebase.auth)
-// pointer to firebase databse
+
 const db = firebase.db
+const auth = firebase.auth
 const ref = db.ref('packets').orderByChild('createdAt')
+
 export default {
   name: 'dashboard',
   data () {
@@ -49,8 +50,12 @@ export default {
     }
   },
   // bind packets to database using VueFire
-  firebase: {
-    packets: db.ref('packets')
+  created () {
+    // bind packet with database using VueFire
+    const uid = this.$store.getters.getUID
+    if (uid != null) {
+      this.$rtdbBind('packets', db.ref('users/' + uid + '/packets'))
+    }
   }
 }
 </script>

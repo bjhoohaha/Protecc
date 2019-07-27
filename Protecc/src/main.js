@@ -14,8 +14,10 @@ Vue.use(rtdbPlugin)
 Vue.use(Vuetify)
 Vue.config.productionTip = false
 
-let app = ''
+let app = null
 const auth = firebase.auth
+
+// router beforeEach takes place before firebase initialization takes place
 auth.onAuthStateChanged(function () {
   if (!app) {
     app = new Vue({

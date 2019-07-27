@@ -32,18 +32,21 @@ export default {
   },
   created () {
     let count = 0
-    this.$store.dispatch('update')
-    const ref = db.ref('packets')
-    ref.limitToLast(1).on('child_added', snapshot => {
-      if (snapshot.exists() && count > 0) {
-        console.log('added')
-        console.log(snapshot.val())
-        const packet = snapshot.val()
-        this.$store.dispatch('updateStats', packet)
-      }
-      count++
-    })
-    console.log('listening')
+    const currentUser = firebase.auth.currentUser
+    if (currentUser) {
+      const uid = currentUser.uid
+      const ref = db.ref('users/' + uid + '/packets')
+      ref.limitToLast(1).on('child_added', snapshot => {
+        if (snapshot.exists() && count > 0) {
+          console.log('added')
+          console.log(snapshot.val())
+          const packet = snapshot.val()
+          this.$store.dispatch('updateStats', packet)
+        }
+        count++
+      })
+      console.log('listening')
+    }
   }
 }
 </script>

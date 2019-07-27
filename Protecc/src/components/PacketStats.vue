@@ -75,7 +75,6 @@ import firebase from '../firebase'
 import BarChart from './BarChart.vue'
 import LineChart from './LineChart.vue'
 import DoughnutChart from './DoughnutChart.vue'
-
 const db = firebase.db
 export default {
   name: 'packet-stats',
@@ -115,11 +114,6 @@ export default {
     BarChart,
     LineChart,
     DoughnutChart
-  },
-  firebase: {
-    dateData: db.ref('stats/date'),
-    protocolData: db.ref('stats/protocol'),
-    lengthData: db.ref('stats/length')
   },
   computed: {
     protocolTableValues: function () {
@@ -209,6 +203,14 @@ export default {
           }
         ]
       }
+    }
+  },
+  created () {
+    const uid = this.$store.getters.getUID
+    if (uid != null) {
+      this.$rtdbBind('dateData', db.ref('users/' + uid + '/stats/date'))
+      this.$rtdbBind('lengthData', db.ref('users/' + uid + '/stats/length'))
+      this.$rtdbBind('protocolData', db.ref('users/' + uid + '/stats/protocol'))
     }
   }
 }
