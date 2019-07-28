@@ -7,7 +7,10 @@ import PacketStats from '@/components/PacketStats'
 import ViewPacket from '@/components/ViewPacket'
 import Login from '@/components/Login.vue'
 import SignUp from '@/components/SignUp.vue'
-// import Settings from '@/components/Settings.vue'
+import Settings from '@/components/Settings.vue'
+import Rules from '@/components/Rules.vue'
+import CreateRule from '@/components/CreateRule.vue'
+import ViewRule from '@/components/ViewRule.vue'
 import firebase from '../firebase'
 
 Vue.use(Router)
@@ -68,12 +71,40 @@ const router = new Router({
       path: '/sign-up',
       name: 'sign-up',
       component: SignUp
+    },
+    {
+      path: '/settings',
+      name: 'Settings',
+      component: Settings,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/rules',
+      name: 'Rules',
+      component: Rules,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/rules/:id',
+      name: 'view-rule',
+      component: ViewRule,
+      props: true,
+      meta: {
+        requiresAuth: true
+      }
+    },,
+    {
+      path: '/create',
+      name: 'CreateRule',
+      component: CreateRule,
+      meta: {
+        requiresAuth: true
+      }
     }
-    // {
-    //   path: '/settings',
-    //   name: 'Settings',
-    //   component: Settings
-    // }
   ]
 })
 
@@ -83,6 +114,7 @@ const auth = firebase.auth
 router.beforeEach((to, from, next) => {
   const currentUser = auth.currentUser
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
+  if (!requiresAuth && currentUser) next('home')
   if (requiresAuth && !currentUser) next('login')
   else next()
 })

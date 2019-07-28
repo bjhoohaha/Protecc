@@ -2,6 +2,7 @@
   <div id="navbar">
     <v-tabs background color="pink lighten-1" dark>
       <v-tab to="/home"> Home </v-tab>
+      <v-tab to="/rules"> Rules </v-tab>
       <v-tab to="/stats"> Stats </v-tab>
       <v-spacer></v-spacer>
       <v-tab to="/settings"> Settings </v-tab>

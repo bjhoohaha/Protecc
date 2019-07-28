@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['PyrebaseAdmin.py'],
-             pathex=['/Users/bj/PyrebaseAdmin'],
+             pathex=['/Users/bj/Protecc'],
              binaries=[],
              datas=[],
              hiddenimports=[],

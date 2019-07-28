@@ -48,13 +48,69 @@ export default new Vuex.Store({
         .child('date')
         .child(packet.createdAt.substring(0, 10))
         .transaction(decrement)
+    },
+    submitNumber: (context, input) => {
+      const uid = firebase.auth.currentUser.uid
+      db.ref('users/' + uid + '/settings/infinite/count').transaction(val => {
+        return input > 0 ? input : 1
+      })
+    },
+    changeInfinityMode: (context, infinity) => {
+      const uid = firebase.auth.currentUser.uid
+      db.ref('users/' + uid + '/settings/infinite/active').transaction(val => {
+        return infinity
+      })
+    },
+    changeRulesMode: (context, rules) => {
+      const uid = firebase.auth.currentUser.uid
+      db.ref('users/' + uid + '/settings/rules/active').transaction(val => {
+        return rules
+      })
+    },
+    activateRule: (context, rule) => {
+      const uid = firebase.auth.currentUser.uid
+      const key = rule.key
+      if (rule.active == false) {
+        db.ref('users/' + uid + '/rules/active')
+          .child(key)
+          .remove()
+      } else {
+        db.ref('users/' + uid + '/rules/active/' + key).transaction(
+          val => rule.filter
+        )
+      }
+      db.ref('users/' + uid + '/rules/saved/' + key + '/active').transaction(
+        val => !val
+      )
+    },
+    deleteRule: (context, key) => {
+      const uid = firebase.auth.currentUser.uid
+      db.ref('users/' + uid + '/rules/saved/' + key).remove()
+      db.ref('users/' + uid + '/rules/active/' + key).remove()
+    },
+    updateRule: (context, obj) => {
+      const uid = firebase.auth.currentUser.uid
+      const id = obj.id
+      const rule = obj.rule
+      if (id == null) {
+        if (rule.filter != null) {
+          const savedRule = db.ref('users/' + uid + '/rules/saved').push(rule)
+          db.ref('users/' + uid + '/rules/active/' + savedRule.key).set(rule)
+        }
+      } else {
+        db.ref('users/' + uid + '/rules/saved')
+          .child(id)
+          .set(rule)
+        db.ref('users/' + uid + '/rules/active')
+          .child(id)
+          .set(rule)
+      }
     }
   },
   mutations: {},
   getters: {
     getUID: state => {
       const user = firebase.auth.currentUser
-      console.log(user)
       if (user) return user.uid
       return null
     }

@@ -20,14 +20,22 @@ let runPyrebase = null;
 app.post("/capture", function(req, res) {
   // spawn pyrebase
   const uid = req.body.uid;
-  runPyrebase = spawn("python3", ["PyrebaseAdmin.py", uid]);
+  const count = req.body.count;
+  const filter = req.body.filter;
+
+  const arr = [uid];
+
+  if (count.length != 0) arr.push(count);
+  if (filter.length != 0) arr.push(filter);
+
+  runPyrebase = spawn("./dist/PyrebaseAdmin", arr);
   // send error if failed to spawn
   runPyrebase.on("error", err => {
     res.status(500);
     res.end();
   });
   // send error if script failed
-  runPyrebase.stderr.on("data", data => {
+  runPyrebase.stderr.on("data", err => {
     res.status(400);
     res.end();
   });

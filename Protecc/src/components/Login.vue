@@ -104,7 +104,6 @@ export default {
   methods: {
     // listen for new packets -> statistics
     listen: function (uid) {
-      console.log(uid)
       let count = 0
       const ref = db.ref('users/' + uid + '/packets')
       ref.limitToLast(1).on('child_added', snapshot => {
@@ -126,7 +125,7 @@ export default {
           this.dialog = false
           // start listener
           this.listen(result.user.uid)
-          this.$router.replace('/')
+          this.$router.go('/')
         },
         err => {
           this.alert = true
@@ -149,7 +148,7 @@ export default {
           this.dialog = false
           // start listener
           this.listen(result.user.uid)
-          this.$router.replace('/')
+          this.$router.go('/')
         },
         err => {
           this.alert = true
