@@ -4,9 +4,9 @@ block_cipher = None
 
 
 a = Analysis(['PyrebaseAdmin.py'],
-             pathex=['/Users/bj/Protecc'],
+             pathex=['/Users/bj/PyrebaseAdmin'],
              binaries=[],
-             datas=[('/users/bj/Protecc/serviceAccountKey.json','.')],
+             datas=[],
              hiddenimports=[],
              hookspath=[],
              runtime_hooks=[],

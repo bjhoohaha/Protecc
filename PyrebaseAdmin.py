@@ -8,11 +8,14 @@ import os
 import datetime
 import subprocess
 # initialize credentials
-uid = sys.argv[1]
-options= []
+# print(sys.argv)
+# uid = sys.argv[1]
+# options = []
+# if(len(sys.argv) > 2):
+#     options= sys.argv[2:]
 # pass in arguments if required
 # options = ['-c', str(sys.argv[1])]
-cred = credentials.Certificate("/users/bj/Protecc/serviceAccountKey.json")
+cred = credentials.Certificate("/users/tishya/Desktop/Protecc-master/serviceAccountKey.json")
 firebase_admin.initialize_app(cred, {
     'databaseURL': 'https://employee-manager-66213.firebaseio.com'
 })
@@ -54,7 +57,7 @@ firebase_admin.initialize_app(cred, {
 
 ################################################################################
 try:
-    sharkProcess = subprocess.Popen(['tshark'] + options,stdout=subprocess.PIPE,
+    sharkProcess = subprocess.Popen(['tshark'],stdout=subprocess.PIPE,
                                              stderr=subprocess.PIPE)
     print("tshark is running...", file=sys.stdout)
     i = 0
@@ -76,7 +79,7 @@ try:
         # classifyProtocol(packetInfoArray[5])
         # classifyLength(packetInfoArray[6])
         # classifyDate(now)
-        db.reference('users/' + uid + '/packets').push(data)
+        db.reference('packets').push(data)
         i += 1
         print(str(i) + " packets added")
 except KeyboardInterrupt:
