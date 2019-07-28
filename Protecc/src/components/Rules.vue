@@ -10,7 +10,7 @@
     </v-subheader>
     <br />
     <v-list subheader three-line>
-      <v-list-tile v-for="(rule, key) in savedRules">
+      <v-list-tile v-bind:key="key" v-for="(rule, key) in savedRules">
         <v-list-tile-action>
           <v-checkbox
             v-model="rule['active']"

@@ -129,7 +129,8 @@ export default {
         },
         err => {
           this.alert = true
-          this.err = err.message
+          console.log(err.message)
+          this.error = err.message
         }
       )
     },
