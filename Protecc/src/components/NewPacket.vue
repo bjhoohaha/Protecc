@@ -139,8 +139,16 @@ export default {
   },
   created () {
     const uid = this.$store.getters.getUID
-    this.$rtdbBind('settings', db.ref('users/' + uid + '/settings'))
-    this.$rtdbBind('rules', db.ref('users/' + uid + '/rules/active'))
+    const self = this
+    db.ref('users/' + uid + '/settings')
+      .once('value', result => {
+        if (!result.hasChildren()) {
+          this.$store.dispatch('initializeSettings')
+        }
+      })
+      .then(() => {
+        this.$rtdbBind('settings', db.ref('users/' + uid + '/settings'))
+      })
   },
   watch: {
     settings: function () {

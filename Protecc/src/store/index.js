@@ -105,6 +105,16 @@ export default new Vuex.Store({
           .child(id)
           .set(rule)
       }
+    },
+    initializeSettings: context => {
+      const uid = firebase.auth.currentUser.uid
+      const defaults = {}
+      defaults['infinite'] = {}
+      defaults['infinite']['active'] = true
+      defaults['infinite']['count'] = 1
+      defaults['rules'] = {}
+      defaults['rules']['active'] = true
+      db.ref('users/' + uid + '/settings').set(defaults)
     }
   },
   mutations: {},

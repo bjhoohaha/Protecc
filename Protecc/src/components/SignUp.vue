@@ -100,7 +100,7 @@ export default {
         auth.createUserWithEmailAndPassword(this.email, this.password).then(
           function (result) {
             // redirect
-            self.$router.push('/')
+            self.$router.go('/')
           },
           function (err) {
             self.bounce = true
