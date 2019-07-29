@@ -94,12 +94,13 @@ export default new Vuex.Store({
       db.ref('users/' + uid + '/rules/saved/' + key).remove()
       db.ref('users/' + uid + '/rules/active/' + key).remove()
     },
+    // create rule also upon submit
     // update rule upon edit
     updateRule: (context, obj) => {
       const uid = firebase.auth.currentUser.uid
       const id = obj.id
       const rule = obj.rule
-      if (id == null) {
+      if (id == null || id.length == 0) {
         if (rule.filter != null) {
           const savedRule = db.ref('users/' + uid + '/rules/saved').push(rule)
           db.ref('users/' + uid + '/rules/active/' + savedRule.key).set(rule)
