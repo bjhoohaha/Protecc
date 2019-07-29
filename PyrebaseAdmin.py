@@ -14,7 +14,7 @@ uid = sys.argv[1]
 options = []
 if(len(sys.argv) > 2):
     options= sys.argv[2:]
-cred = credentials.Certificate("/users/bj/Protecc/serviceAccountKey.json")
+cred = credentials.Certificate("./serviceAccountKey.json")
 firebase_admin.initialize_app(cred, {
     'databaseURL': 'https://employee-manager-66213.firebaseio.com'
 })
