@@ -88,9 +88,7 @@ export default {
     // tshark allow users to configure their own capture filter
     // turn user's rules to arguments for tshark
     getFilterOptions () {
-      const filter = Object.values(this.rules)
-        .map(rule => rule.filter)
-        .join(' or ')
+      const filter = Object.values(this.rules).join(' or ')
 
       if (this.settings['rules']) {
         const rules = this.settings['rules']
@@ -107,6 +105,7 @@ export default {
       this.dialog = false
       this.capture = !this.capture
       const uid = this.$store.getters.getUID
+      console.log(this.getFilterOptions)
       // use axios to submit a POST request
       return axios
         .post(url, {
@@ -164,8 +163,9 @@ export default {
         }
       })
       .then(() => {
-        // bind settings to database user's saved settings with VueFire
+        // bind settings and rules to database user's saved settings with VueFire
         this.$rtdbBind('settings', db.ref('users/' + uid + '/settings'))
+        this.$rtdbBind('rules', db.ref('users/' + uid + '/rules/active'))
       })
   },
   watch: {

@@ -103,7 +103,9 @@ export default new Vuex.Store({
       if (id == null || id.length == 0) {
         if (rule.filter != null) {
           const savedRule = db.ref('users/' + uid + '/rules/saved').push(rule)
-          db.ref('users/' + uid + '/rules/active/' + savedRule.key).set(rule)
+          db.ref('users/' + uid + '/rules/active/' + savedRule.key).set(
+            rule.filter
+          )
         }
       } else {
         db.ref('users/' + uid + '/rules/saved')
