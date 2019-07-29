@@ -29,6 +29,7 @@ app.post("/capture", function(req, res) {
   if (filter.length != 0) arr.push(filter);
   // source code is PyrebaseAdmin.py
   // compiled python to unix executable
+  console.log(arr);
   runPyrebase = spawn("./dist/PyrebaseAdmin", arr);
   // send error if failed to spawn
   runPyrebase.on("error", err => {
@@ -50,7 +51,8 @@ app.post("/capture", function(req, res) {
 app.delete("/capture", function(req, res) {
   // send response after killed
   try {
-    runPyrebase.kill().then(res.send("tshark stopped"));
+    runPyrebase.kill();
+    res.send("tshark stopped");
   } catch (err) {
     console.log(err);
   }
