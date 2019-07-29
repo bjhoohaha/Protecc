@@ -88,7 +88,11 @@ export default {
     // tshark allow users to configure their own capture filter
     // turn user's rules to arguments for tshark
     getFilterOptions () {
-      const filter = Object.values(this.rules).join(' or ')
+      const filter = Object.values(this.rules)
+        .map(rule => {
+          return rule.filter
+        })
+        .join(' or ')
 
       if (this.settings['rules']) {
         const rules = this.settings['rules']
@@ -105,7 +109,6 @@ export default {
       this.dialog = false
       this.capture = !this.capture
       const uid = this.$store.getters.getUID
-      console.log(this.getFilterOptions)
       // use axios to submit a POST request
       return axios
         .post(url, {

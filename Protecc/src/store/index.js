@@ -79,9 +79,7 @@ export default new Vuex.Store({
           .child(key)
           .remove()
       } else {
-        db.ref('users/' + uid + '/rules/active/' + key).transaction(
-          val => rule.filter
-        )
+        db.ref('users/' + uid + '/rules/active/' + key).transaction(val => rule)
       }
       db.ref('users/' + uid + '/rules/saved/' + key + '/active').transaction(
         val => !val
@@ -103,9 +101,7 @@ export default new Vuex.Store({
       if (id == null || id.length == 0) {
         if (rule.filter != null) {
           const savedRule = db.ref('users/' + uid + '/rules/saved').push(rule)
-          db.ref('users/' + uid + '/rules/active/' + savedRule.key).set(
-            rule.filter
-          )
+          db.ref('users/' + uid + '/rules/active/' + savedRule.key).set(rule)
         }
       } else {
         db.ref('users/' + uid + '/rules/saved')
