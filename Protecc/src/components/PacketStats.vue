@@ -80,9 +80,11 @@ export default {
   name: 'packet-stats',
   data () {
     return {
+      // respective database for different data
       dateData: {},
       protocolData: {},
       lengthData: {},
+      // respective header for table columns
       dateHeader: [
         {
           text: 'Date',
@@ -116,6 +118,7 @@ export default {
     DoughnutChart
   },
   computed: {
+    // format table values for Vuetify's html v-table
     protocolTableValues: function () {
       return Object.entries(this.protocolData).map(entry => {
         return { protocol: entry[0], count: entry[1] }
@@ -131,6 +134,7 @@ export default {
         return { date: entry[0], count: entry[1] }
       })
     },
+    // format packet's protocol data in Vue data object to arguments for chart js
     getProtocolData: function () {
       return {
         labels: Object.keys(this.protocolData),
@@ -162,6 +166,7 @@ export default {
         ]
       }
     },
+    // format packet's length data in Vue data object to arguments for chart js
     getLengthData: function () {
       return {
         labels: [
@@ -188,6 +193,7 @@ export default {
         ]
       }
     },
+    // format packet's date data in Vue data object to arguments for chart js
     getDateData: function () {
       return {
         labels: Object.keys(this.dateData),
@@ -208,6 +214,7 @@ export default {
   created () {
     const uid = this.$store.getters.getUID
     if (uid != null) {
+      // bind  respective stats data to data object in Vue
       this.$rtdbBind('dateData', db.ref('users/' + uid + '/stats/date'))
       this.$rtdbBind('lengthData', db.ref('users/' + uid + '/stats/length'))
       this.$rtdbBind('protocolData', db.ref('users/' + uid + '/stats/protocol'))

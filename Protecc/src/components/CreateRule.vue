@@ -11,10 +11,3 @@ export default {
     Form
   }
 }
-</script>
-<style scoped>
-.v-btn {
-  font-family: 'Patua One';
-  color: white;
-}
-</style>

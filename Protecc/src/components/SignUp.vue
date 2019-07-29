@@ -93,19 +93,17 @@ export default {
   },
   methods: {
     signUp: function () {
-      // pointer to outside this
-      const self = this
       if (this.validateAll) {
         // reference email and password from data()
         auth.createUserWithEmailAndPassword(this.email, this.password).then(
-          function (result) {
+          result => {
             // redirect
-            self.$router.go('/')
+            this.$router.go('/')
           },
-          function (err) {
-            self.bounce = true
+          err => {
+            this.bounce = true
             // update error message to alert
-            self.message = err.message
+            this.message = err.message
           }
         )
       }

@@ -7,7 +7,6 @@ import { rtdbPlugin } from 'vuefire'
 import App from './App.vue'
 import Vuetify from 'vuetify'
 import router from './router'
-// store is property in './store/index.js'
 import store from './store'
 
 Vue.use(rtdbPlugin)
@@ -17,7 +16,9 @@ Vue.config.productionTip = false
 let app = null
 const auth = firebase.auth
 
-// router beforeEach takes place before firebase initialization takes place
+// vue routes to next page view takes place
+// before firebase initialization takes place
+// reinitialize app with firebase auth upon change
 auth.onAuthStateChanged(function () {
   if (!app) {
     app = new Vue({

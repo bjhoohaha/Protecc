@@ -1,3 +1,26 @@
+/*
+////////////////////////// DEVELOPER's NOTES ///////////////////////////////////
+
+This javscript file was never used in the database.
+
+However, it was built with the intention of using js to spawn tshark.
+Thus, maintaining all dependencies within Package.json.
+
+However, during development it was found that child_process module in js runs
+tshark asynchronously. This led to a lot of problems where the js file was able
+to send 1000+ packets to the database in matter of seconds. This was faster than
+what the web listener could pick up, which is used on the client side to
+generate statistics since firebase is unable to do any data analytics. Setting
+a timeout was trialed but the interval between each packet push to firebase was
+still extremely fast.
+
+Node js child process module allow child process to run synchornously but it
+will need to wait for the process to finish. As tshark run forever. The object
+never gets returned.
+
+////////////////////////////////////////////////////////////////////////////////
+*/
+
 // initialise with ADMIN priviledges
 const admin = require("firebase-admin");
 const { spawn } = require("child_process");
@@ -13,52 +36,6 @@ admin.initializeApp({
 const db = admin.database();
 // pointer to packets ref
 const ref = db.ref("packetsTest");
-
-// function classifyProtocol(protocol) {
-//   let count = -1;
-//   function removeDots(protocol) {
-//     if (protocol.includes(".")) {
-//       const index = protocol.indexOf(".");
-//       return protocol.substring(0, index) + "-" + protocol.substring(index + 1);
-//     } else {
-//       return protocol;
-//     }
-//   }
-//   const protocolSts = db.ref("stats/protocol/" + removeDots(protocol));
-//
-//   protocolSts.transaction(val => {
-//     return val == null ? 1 : val++;
-//   });
-// }
-//
-// function classifyLength(length) {
-//   let count = 0;
-//   let path = "<1500";
-//   if (length < 100) {
-//     path = "0-100";
-//   } else if (length < 200) {
-//     path = "100-200";
-//   } else if (length < 500) {
-//     path = "200-500";
-//   } else if (length < 1000) {
-//     path = "500-1000";
-//   } else if (length < 1500) {
-//     path = "1000-1500";
-//   }
-//   const lengthSts = db.ref("stats/length/" + path);
-//   lengthSts.transaction(val => {
-//     return val == null ? 1 : val++;
-//   });
-// }
-//
-// function classifyDate(date) {
-//   let count = 0;
-//   const dateStr = date.substring(0, 10);
-//   const dateSts = db.ref("stats/date/" + dateStr);
-//   dateSts.transaction(val => {
-//     return val == null ? 1 : val++;
-//   });
-// }
 
 const tshark = spawn("tshark", ["-l", "-c 15"]);
 let i = 1;
@@ -86,6 +63,7 @@ tshark.stdout.on("data", data => {
         length: arr[6],
         info: arr.slice(7).join(" ")
       };
+      // push data to firebase
       ref.push(data, function(error) {
         if (error) {
           console.log(error);

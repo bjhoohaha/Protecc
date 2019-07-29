@@ -1,11 +1,12 @@
 <template>
   <div id="new-packet">
+    <!-- Error message if unable to connect to express router -->
     <v-dialog :value="dialog">
       <v-card>
         <v-toolbar>
-          <v-card-title id="title"
-            ><strong>ERROR {{ error }}</strong></v-card-title
-          >
+          <v-card-title id="title">
+            <strong> ERROR {{ error }} </strong>
+          </v-card-title>
         </v-toolbar>
         <v-alert id="message" :value="true" color="blue-grey lighten-2">
           {{ message }}
@@ -13,6 +14,8 @@
         <img id="bear-logo" src="../assets/error-display.png" />
       </v-card>
     </v-dialog>
+    <!-- start capture button -->
+    <!-- allow start /stop capture only after settings are initialized -->
     <div v-if="ready">
       <v-btn
         v-if="capture"
@@ -26,6 +29,7 @@
       >
         START
       </v-btn>
+      <!-- stop capture button -->
       <v-btn
         v-else
         @click="killTshark"
@@ -48,6 +52,7 @@
 import axios from 'axios'
 import firebase from '../firebase'
 
+// express router
 const url = 'http://localhost:4000/capture'
 const db = firebase.db
 
@@ -55,16 +60,22 @@ export default {
   name: 'new-packet',
   data () {
     return {
+      // toggle dialog overlay true or false
       dialog: false,
+      // error message
       message: '',
       error: '',
+      // toggle start / stop capture
       capture: 'false',
       settings: {},
       rules: {},
+      // allow start / stop capture when ready
       ready: false
     }
   },
   computed: {
+    // tshark allow users to indicate capture packet count with '-c'
+    // turn user's settings to arguments for tshark
     getCountOption () {
       if (this.settings) {
         const infinite = this.settings['infinite']
@@ -74,6 +85,8 @@ export default {
       }
       return ''
     },
+    // tshark allow users to configure their own capture filter
+    // turn user's rules to arguments for tshark
     getFilterOptions () {
       const filter = Object.values(this.rules)
         .map(rule => rule.filter)
@@ -89,11 +102,12 @@ export default {
     }
   },
   methods: {
+    // POST request to start logging packet
     runTshark () {
       this.dialog = false
       this.capture = !this.capture
       const uid = this.$store.getters.getUID
-      // POST request to start logging packet
+      // use axios to submit a POST request
       return axios
         .post(url, {
           count: this.getCountOption,
@@ -126,6 +140,7 @@ export default {
     // DELETE request to kill logging process
     killTshark () {
       this.capture = !this.capture
+      // use axios to send a delete request
       return axios.delete(url).then(
         result => {
           this.message = 'killed'
@@ -142,15 +157,20 @@ export default {
     const self = this
     db.ref('users/' + uid + '/settings')
       .once('value', result => {
+        // new users may not have settings initialized
+        // hence check if 'settings' exists in database for current user
         if (!result.hasChildren()) {
           this.$store.dispatch('initializeSettings')
         }
       })
       .then(() => {
+        // bind settings to database user's saved settings with VueFire
         this.$rtdbBind('settings', db.ref('users/' + uid + '/settings'))
       })
   },
   watch: {
+    // Watch for changes in settings
+    // Allow packet capture when settings finish initialize
     settings: function () {
       this.ready = true
     }

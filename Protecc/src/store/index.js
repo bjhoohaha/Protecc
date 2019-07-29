@@ -49,12 +49,14 @@ export default new Vuex.Store({
         .child(packet.createdAt.substring(0, 10))
         .transaction(decrement)
     },
+    // submit user's capture packet count in settings to database
     submitNumber: (context, input) => {
       const uid = firebase.auth.currentUser.uid
       db.ref('users/' + uid + '/settings/infinite/count').transaction(val => {
         return input > 0 ? input : 1
       })
     },
+    // save user's settings
     changeInfinityMode: (context, infinity) => {
       const uid = firebase.auth.currentUser.uid
       db.ref('users/' + uid + '/settings/infinite/active').transaction(val => {
@@ -67,6 +69,8 @@ export default new Vuex.Store({
         return rules
       })
     },
+    // activate rule by adding rule to active rules
+    // only active rules will be used as capture filter for tshark
     activateRule: (context, rule) => {
       const uid = firebase.auth.currentUser.uid
       const key = rule.key
@@ -83,11 +87,14 @@ export default new Vuex.Store({
         val => !val
       )
     },
+    // delete rule from active rules
+    // only active rules will be used as capture filter for tshark
     deleteRule: (context, key) => {
       const uid = firebase.auth.currentUser.uid
       db.ref('users/' + uid + '/rules/saved/' + key).remove()
       db.ref('users/' + uid + '/rules/active/' + key).remove()
     },
+    // update rule upon edit
     updateRule: (context, obj) => {
       const uid = firebase.auth.currentUser.uid
       const id = obj.id
@@ -106,6 +113,7 @@ export default new Vuex.Store({
           .set(rule)
       }
     },
+    // initialize user's settings for new user
     initializeSettings: context => {
       const uid = firebase.auth.currentUser.uid
       const defaults = {}
@@ -119,6 +127,7 @@ export default new Vuex.Store({
   },
   mutations: {},
   getters: {
+    // get user ID
     getUID: state => {
       const user = firebase.auth.currentUser
       if (user) return user.uid

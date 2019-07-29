@@ -32,6 +32,7 @@ export default {
   },
   options: {},
   mounted () {
+    // bind data to render the chart with props passed in
     this.renderChart(this.chartData, this.options)
   }
 }

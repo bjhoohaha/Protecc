@@ -1,6 +1,5 @@
 <template>
   <v-container fluid>
-    <!-- <img src="../assets/logo.png" /> -->
     <!-- display logo in a row -->
     <v-layout row wrap>
       <!-- title and subtitle -->

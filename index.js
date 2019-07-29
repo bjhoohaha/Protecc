@@ -24,10 +24,11 @@ app.post("/capture", function(req, res) {
   const filter = req.body.filter;
 
   const arr = [uid];
-
+  // pass in additional arguments
   if (count.length != 0) arr.push(count);
   if (filter.length != 0) arr.push(filter);
-
+  // source code is PyrebaseAdmin.py
+  // compiled python to unix executable
   runPyrebase = spawn("./dist/PyrebaseAdmin", arr);
   // send error if failed to spawn
   runPyrebase.on("error", err => {

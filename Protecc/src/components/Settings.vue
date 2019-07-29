@@ -1,6 +1,7 @@
 <template>
   <div id="settings">
     <v-container fluid>
+      <!-- infinite mode settings -->
       <v-layout row wrap>
         <v-flex xs12>
           Allow infinite packet capture or manually configure the number of
@@ -8,16 +9,19 @@
           <br />
         </v-flex>
         <v-flex xs12>
+          <!-- switch to toggle infinite mode on / off -->
           <v-switch
             v-model="infinity"
             :label="`Infinity Mode : ${onOff(infinity)}`"
             @change="changeInfinityMode()"
           ></v-switch>
         </v-flex>
+        <!-- allow user to configure capture packet count with text input -->
         <v-flex xs11 class="Patua" id="number">
           <div v-if="!edit && !infinity">
             {{ input }}
           </div>
+          <!-- text input -->
           <v-text-field
             type="number"
             solo
@@ -29,6 +33,7 @@
           ></v-text-field>
         </v-flex>
         <v-flex xs1>
+          <!-- edit button -->
           <v-btn
             fab
             small
@@ -38,6 +43,7 @@
           >
             <v-icon>edit</v-icon>
           </v-btn>
+          <!-- save button -->
           <v-btn
             fab
             small
@@ -51,6 +57,7 @@
       </v-layout>
       <v-divider />
       <v-layout row wrap>
+        <!-- settings for rules mode -->
         <v-flex xs12>
           <br />
           Pass in rules for packet caputre
@@ -86,12 +93,14 @@ export default {
     onOff (val) {
       return val == true ? 'On' : 'Off'
     },
+    // submit capture packet count to database to save user's settings
     submitNumber () {
       if (this.input > 0) {
         this.edit = false
         this.$store.dispatch('submitNumber', this.input)
       }
     },
+    // save user's settings
     changeInfinityMode () {
       this.$store.dispatch('changeInfinityMode', this.infinity)
     },
@@ -101,6 +110,7 @@ export default {
   },
   created () {
     const uid = firebase.auth.currentUser.uid
+    // bind database to each user's settings data in Vue using VueFire
     db.ref('users/' + uid + '/settings').once('value', result => {
       const obj = result.val()
       this.input = obj['infinite']['count']

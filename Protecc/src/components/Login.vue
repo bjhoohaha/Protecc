@@ -41,6 +41,7 @@
               <p v-else>
                 <v-card-text>
                   <v-form>
+                    <!-- email text field -->
                     <v-text-field
                       v-model="email"
                       prepend-icon="person"
@@ -48,6 +49,7 @@
                       label="Login"
                       type="email"
                     ></v-text-field>
+                    <!-- password text field -->
                     <v-text-field
                       v-model="password"
                       id="password"
@@ -89,10 +91,13 @@ const auth = firebase.auth
 export default {
   name: 'Login',
   data: () => ({
-    // toggle overlay true or false
+    // toggle dialog overlay true or false
     dialog: true,
+    // determine whether login with email or google
     loginWithEmail: true,
+    // show alerts upon failed validation input
     alert: false,
+    // error message for alerts
     error: '',
     email: '',
     password: ''
@@ -110,6 +115,7 @@ export default {
           this.$router.go('/')
         },
         err => {
+          // log error message and show alert
           this.alert = true
           console.log(err.message)
           this.error = err.message
@@ -131,6 +137,7 @@ export default {
           this.$router.go('/')
         },
         err => {
+          // log error message and show alert
           this.alert = true
           this.error = err.message
         }
@@ -148,6 +155,6 @@ export default {
   font-family: 'Patua One';
 }
 .spacer {
-  text-align: center; /* align 'or'*/
+  text-align: center;
 }
 </style>

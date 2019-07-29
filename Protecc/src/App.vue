@@ -36,6 +36,7 @@ export default {
     if (currentUser) {
       const uid = currentUser.uid
       const ref = db.ref('users/' + uid + '/packets')
+      // add a listener to every new packet added to firebase
       ref.limitToLast(1).on('child_added', snapshot => {
         if (snapshot.exists() && count > 0) {
           console.log('added')
@@ -50,14 +51,3 @@ export default {
   }
 }
 </script>
-
-<style>
-/*
-// Align app to take up full view
-#app {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-}
-*/
-</style>

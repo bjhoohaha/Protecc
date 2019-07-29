@@ -9,8 +9,10 @@
       </v-btn>
     </v-subheader>
     <br />
+    <!-- list  -->
     <v-list subheader three-line>
       <v-list-tile v-bind:key="key" v-for="(rule, key) in savedRules">
+        <!-- check box to toggle rule on or off -->
         <v-list-tile-action>
           <v-checkbox
             v-model="rule['active']"
@@ -25,6 +27,7 @@
             {{ rule.filter }}
           </v-list-tile-sub-title>
         </v-list-tile-content>
+        <!-- link to edit rule -->
         <router-link
           class="secondary-content"
           v-bind:to="{
@@ -38,9 +41,11 @@
             }
           }"
         >
+          <!-- edit icon -->
           <v-icon>
             create
           </v-icon>
+          <!-- link to delete rule -->
         </router-link>
         <v-icon @click="deleteRule(key)">
           delete
@@ -61,14 +66,17 @@ const db = firebase.db
 export default {
   data () {
     return {
+      // database of saved rules
       savedRules: {}
     }
   },
   methods: {
+    // activate rule upon checkbox selected
     activateRule (rule, key) {
       rule.key = key
       this.$store.dispatch('activateRule', rule)
     },
+    // delete rule upon delete button press
     deleteRule (key) {
       const uid = this.$store.getters.getUID
       this.$store.dispatch('deleteRule', key)
@@ -76,6 +84,7 @@ export default {
   },
   created () {
     const uid = this.$store.getters.getUID
+    // bind saved rules data in database to vue using VueFire
     this.$rtdbBind('savedRules', db.ref('users/' + uid + '/rules/saved/'))
   }
 }

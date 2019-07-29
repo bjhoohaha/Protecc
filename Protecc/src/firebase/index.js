@@ -14,5 +14,5 @@ const db = app.database()
 const auth = firebase.auth()
 const fb = firebase
 const { currentUser } = auth
-
+// export firebase object that has been initialized to Vue components
 export default { app, auth, db, fb, currentUser }

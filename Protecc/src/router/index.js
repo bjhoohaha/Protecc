@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
+
 import Dashboard from '@/components/Dashboard'
 import NewPacket from '@/components/NewPacket'
 import PacketStats from '@/components/PacketStats'
@@ -18,12 +18,6 @@ Vue.use(Router)
 const router = new Router({
   mode: 'history',
   routes: [
-    // test route
-    {
-      path: '/HelloWorld',
-      name: 'hello-world',
-      component: HelloWorld
-    },
     // both path / and /home will reach dashboard
     {
       path: '/',
@@ -62,16 +56,19 @@ const router = new Router({
         requiresAuth: true
       }
     },
+    // route to login
     {
       path: '/login',
       name: 'login',
       component: Login
     },
+    // route to signup
     {
       path: '/sign-up',
       name: 'sign-up',
       component: SignUp
     },
+    // route to user's settings
     {
       path: '/settings',
       name: 'Settings',
@@ -80,6 +77,7 @@ const router = new Router({
         requiresAuth: true
       }
     },
+    // route to saved rules
     {
       path: '/rules',
       name: 'Rules',
@@ -88,6 +86,7 @@ const router = new Router({
         requiresAuth: true
       }
     },
+    // route to view individual rules
     {
       path: '/rules/:id',
       name: 'view-rule',
@@ -97,6 +96,7 @@ const router = new Router({
         requiresAuth: true
       }
     },,
+    // route to create new rule
     {
       path: '/create',
       name: 'CreateRule',

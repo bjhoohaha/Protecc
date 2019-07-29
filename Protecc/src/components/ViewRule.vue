@@ -1,4 +1,5 @@
 <template>
+  <!-- pass data to form as props -->
   <Form
     v-bind:idProp="id"
     v-bind:nameProp="name"
@@ -16,19 +17,10 @@ const db = firebase.db
 export default {
   props: ['id', 'name', 'host', 'addr', 'prot', 'submit'],
   data () {
-    return {
-      hostSelect: ['Source', 'Destination', 'All'],
-      protocolSelect: ['TCP', 'UDP', 'ARP', 'RARP', 'IP', 'IP6']
-    }
+    return {}
   },
   components: {
     Form
   }
 }
 </script>
-<style scoped>
-.v-btn {
-  font-family: 'Patua One';
-  color: white;
-}
-</style>
