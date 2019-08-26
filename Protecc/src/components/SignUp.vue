@@ -1,73 +1,58 @@
 <template>
-  <div id="sign-up">
-    <v-dialog fullscreen v-bind:value="dialog">
-      <v-container fluid fill-height>
-        <v-layout align-center justify-center>
-          <v-flex xs12 sm8 md4>
-            <v-card class="elevation-12">
-              <!-- toolbar -->
-              <v-toolbar dark color="grey darken-2">
-                <v-toolbar-title>Protecc</v-toolbar-title>
-                <v-spacer></v-spacer>
-              </v-toolbar>
-              <!-- form -->
-              <v-card-text>
-                <!-- alert -->
-                <p>
-                  <!-- output error message by 400 sever response -->
-                  <v-alert v-bind:value="bounce" type="error" dismissible>
-                    {{ message }}
-                  </v-alert>
-                  <v-alert v-bind:value="validate" type="warning" dismissible>
-                    Password is not identical
-                  </v-alert>
-                  <v-alert v-bind:value="missing" type="warning" dismissible>
-                    Missing fields
-                  </v-alert>
-                </p>
-                <!-- text field -->
-                <v-form>
-                  <v-text-field
-                    v-model="email"
-                    prepend-icon="mail"
-                    name="login"
-                    label="Email"
-                    type="email"
-                  ></v-text-field>
-                  <v-text-field
-                    v-model="password"
-                    prepend-icon="vpn_key"
-                    name="password"
-                    label="Password"
-                    type="password"
-                    hint="Password must be at least 6 characters"
-                  ></v-text-field>
-                  <v-text-field
-                    v-model="check_password"
-                    prepend-icon="check"
-                    name="password"
-                    label="Confirm Password"
-                    type="password"
-                  ></v-text-field>
-                </v-form>
-              </v-card-text>
-              <!-- button -->
-              <v-card-actions>
-                <v-btn @click="dialog = false" to="/login" color="white"
-                  >Sign In Instead</v-btn
-                >
-                <v-spacer></v-spacer>
-                <v-btn dark @click="signUp()" color="grey darken-2"
-                  >Sign Up</v-btn
-                >
-              </v-card-actions>
-              <!-- end of form -->
-            </v-card>
-          </v-flex>
-        </v-layout>
-      </v-container>
-    </v-dialog>
-  </div>
+<div id="sign-up">
+  <v-dialog fullscreen v-bind:value="dialog">
+    <v-container fluid fill-height>
+      <v-layout align-center justify-center>
+        <v-flex xs12 sm8 md4>
+          <v-card class="elevation-12">
+            <!-- toolbar -->
+            <v-toolbar dark color="grey darken-2">
+              <v-toolbar-title>Protecc</v-toolbar-title>
+              <v-spacer></v-spacer>
+            </v-toolbar>
+            <!-- form -->
+            <v-card-text>
+              <!-- alert -->
+              <p>
+                <!-- output error message by 400 sever response -->
+                <v-alert v-bind:value="bounce" type="error" dismissible>
+                  {{ message }}
+                </v-alert>
+                <v-alert v-bind:value="validate" type="warning" dismissible>
+                  Password is not identical
+                </v-alert>
+                <v-alert v-bind:value="missing" type="warning" dismissible>
+                  Missing fields
+                </v-alert>
+              </p>
+              <!-- text field -->
+              <v-form>
+                <v-text-field v-model="email" prepend-icon="mail" name="login"
+                    label="Email" type="email"></v-text-field>
+                <v-text-field v-model="password" prepend-icon="vpn_key"
+                    name="password" label="Password" type="password"
+                    hint="Password must be at least 6 characters">
+                </v-text-field>
+                <v-text-field v-model="check_password" prepend-icon="check"
+                    name="password" label="Confirm Password" type="password">
+                </v-text-field>
+              </v-form>
+            </v-card-text>
+            <!-- button -->
+            <v-card-actions>
+              <v-btn @click="dialog = false" to="/login" color="white">Sign In
+                Instead</v-btn>
+              <v-spacer></v-spacer>
+              <v-btn dark @click="signUp()" color="grey darken-2">Sign Up
+              </v-btn>
+            </v-card-actions>
+            <!-- end of form -->
+          </v-card>
+        </v-flex>
+      </v-layout>
+    </v-container>
+  </v-dialog>
+</div>
 </template>
 <script>
 import firebase from '../firebase'
@@ -92,7 +77,7 @@ export default {
     source: String
   },
   methods: {
-    signUp: function () {
+    signUp: function() {
       if (this.validateAll) {
         // reference email and password from data()
         auth.createUserWithEmailAndPassword(this.email, this.password).then(
@@ -111,7 +96,7 @@ export default {
   },
   computed: {
     // validations for input
-    validateAll: function () {
+    validateAll: function() {
       this.missing =
         this.email.length == 0 ||
         this.password.length == 0 ||
@@ -124,13 +109,13 @@ export default {
 </script>
 <style scoped>
 .container {
-  background-color: rgba(
-    255,
-    255,
-    255,
-    0.5
-  ); /* Black background with opacity */
+  background-color: rgba(255,
+      255,
+      255,
+      0.5);
+  /* Black background with opacity */
 }
+
 .v-toolbar__title {
   font-family: 'Patua One';
 }

@@ -1,6 +1,11 @@
 <script>
-import { Doughnut, mixins } from 'vue-chartjs'
-const { reactiveProp } = mixins
+import {
+  Doughnut,
+  mixins
+} from 'vue-chartjs'
+const {
+  reactiveProp
+} = mixins
 
 export default {
   extends: Doughnut,
@@ -8,13 +13,13 @@ export default {
   // from parent component to be passed as prop
   mixins: [reactiveProp],
   name: 'DoughnutChart',
-  data () {
+  data() {
     return {
       options: {}
     }
   },
   options: {},
-  mounted () {
+  mounted() {
     // bind data to render the chart with props passed in
     this.renderChart(this.chartData, this.options)
   }

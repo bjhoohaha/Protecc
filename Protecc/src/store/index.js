@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import VuexPersistence from 'vuex-persist'
+import Loading from 'vue-loading-overlay';
 import firebase from '../firebase'
 
 const db = firebase.db
@@ -9,21 +10,27 @@ const vuexLocal = new VuexPersistence({
 })
 
 Vue.use(Vuex)
+Vue.use(Loading);
 export default new Vuex.Store({
   plugins: [vuexLocal.plugin],
-  state: {},
+  state: {
+    isLoading: false,
+    capture: false
+  },
   actions: {
     // update stats when packet is added on client side
     updateStats: (context, packet) => {
       const uid = firebase.auth.currentUser.uid
       db.ref(
-        'users/' + uid + '/stats/protocol/' + removeChar(packet.protocol)
+        'users/' + uid + '/stats/protocol/' + removeChar(packet
+          .protocol)
       ).transaction(increment)
       db.ref(
         'users/' + uid + '/stats/length/' + lengthToPath(packet.length)
       ).transaction(increment)
       db.ref(
-        'users/' + uid + '/stats/date/' + packet.createdAt.substring(0, 10)
+        'users/' + uid + '/stats/date/' + packet.createdAt.substring(0,
+          10)
       ).transaction(increment)
     },
     // delete packet upon event on client side
@@ -52,22 +59,25 @@ export default new Vuex.Store({
     // submit user's capture packet count in settings to database
     submitNumber: (context, input) => {
       const uid = firebase.auth.currentUser.uid
-      db.ref('users/' + uid + '/settings/infinite/count').transaction(val => {
-        return input > 0 ? input : 1
-      })
+      db.ref('users/' + uid + '/settings/infinite/count').transaction(
+        val => {
+          return input > 0 ? input : 1
+        })
     },
     // save user's settings
     changeInfinityMode: (context, infinity) => {
       const uid = firebase.auth.currentUser.uid
-      db.ref('users/' + uid + '/settings/infinite/active').transaction(val => {
-        return infinity
-      })
+      db.ref('users/' + uid + '/settings/infinite/active').transaction(
+        val => {
+          return infinity
+        })
     },
     changeRulesMode: (context, rules) => {
       const uid = firebase.auth.currentUser.uid
-      db.ref('users/' + uid + '/settings/rules/active').transaction(val => {
-        return rules
-      })
+      db.ref('users/' + uid + '/settings/rules/active').transaction(
+        val => {
+          return rules
+        })
     },
     // activate rule by adding rule to active rules
     // only active rules will be used as capture filter for tshark
@@ -79,11 +89,13 @@ export default new Vuex.Store({
           .child(key)
           .remove()
       } else {
-        db.ref('users/' + uid + '/rules/active/' + key).transaction(val => rule)
+        db.ref('users/' + uid + '/rules/active/' + key).transaction(val =>
+          rule)
       }
-      db.ref('users/' + uid + '/rules/saved/' + key + '/active').transaction(
-        val => !val
-      )
+      db.ref('users/' + uid + '/rules/saved/' + key + '/active')
+        .transaction(
+          val => !val
+        )
     },
     // delete rule from active rules
     // only active rules will be used as capture filter for tshark
@@ -100,8 +112,10 @@ export default new Vuex.Store({
       const rule = obj.rule
       if (id == null || id.length == 0) {
         if (rule.filter != null) {
-          const savedRule = db.ref('users/' + uid + '/rules/saved').push(rule)
-          db.ref('users/' + uid + '/rules/active/' + savedRule.key).set(rule)
+          const savedRule = db.ref('users/' + uid + '/rules/saved').push(
+            rule)
+          db.ref('users/' + uid + '/rules/active/' + savedRule.key).set(
+            rule)
         }
       } else {
         db.ref('users/' + uid + '/rules/saved')
@@ -124,13 +138,29 @@ export default new Vuex.Store({
       db.ref('users/' + uid + '/settings').set(defaults)
     }
   },
-  mutations: {},
+  mutations: {
+    showLoadingOverlay: state => {
+      state.isLoading = true
+    },
+    hideLoadingOverlay: state => {
+      state.isLoading = false
+    },
+    toggleCapture: state => {
+      state.capture = !state.capture
+    }
+  },
   getters: {
     // get user ID
     getUID: state => {
       const user = firebase.auth.currentUser
       if (user) return user.uid
       return null
+    },
+    getLoadingStatus: state => {
+      return state.isLoading;
+    },
+    getCaptureStatus: state => {
+      return state.capture;
     }
   }
 })
@@ -138,7 +168,7 @@ export default new Vuex.Store({
 /// /////////////////////////// HELPER /////////////////////////////////////////
 
 // categorize packet's length to each category
-function lengthToPath (length) {
+function lengthToPath(length) {
   if (length < 100) return '0-100'
   else if (length < 200) return '100-200'
   else if (length < 500) return '200-500'
@@ -148,7 +178,7 @@ function lengthToPath (length) {
 }
 
 // remove special characters like '.' which cannot be in url path
-function removeChar (protocol) {
+function removeChar(protocol) {
   if (protocol.includes('.')) {
     const index = protocol.indexOf('.')
     return protocol.substring(0, index) + '-' + protocol.substring(index + 1)
@@ -157,12 +187,12 @@ function removeChar (protocol) {
   }
 }
 
-function increment (val) {
+function increment(val) {
   val++
   return val == null ? 1 : val
 }
 
-function decrement (val) {
+function decrement(val) {
   val--
   return val
 }

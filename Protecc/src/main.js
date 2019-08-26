@@ -3,7 +3,9 @@
 import Vue from 'vue'
 import firebase from './firebase'
 import './plugins/vuetify'
-import { rtdbPlugin } from 'vuefire'
+import {
+  rtdbPlugin
+} from 'vuefire'
 import App from './App.vue'
 import Vuetify from 'vuetify'
 import router from './router'
@@ -19,13 +21,15 @@ const auth = firebase.auth
 // vue routes to next page view takes place
 // before firebase initialization takes place
 // reinitialize app with firebase auth upon change
-auth.onAuthStateChanged(function () {
+auth.onAuthStateChanged(function() {
   if (!app) {
     app = new Vue({
       el: '#app',
       router,
       store,
-      components: { App },
+      components: {
+        App
+      },
       template: '<App/>'
     }).$mount('#app')
   }

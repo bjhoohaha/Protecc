@@ -1,27 +1,27 @@
 <template>
-  <!-- check whether id exists in the database -->
-  <div id="view-packet" v-if="Object.keys(packet) != 0">
-    <ul class="collection with-header">
-      <li class="collection-header">Packet Name : {{ id }}</li>
-      <li class="collection-item">JSON : {{ packet }}</li>
-      <li class="collection-item">Created At : {{ packet.createdAt }}</li>
-      <li class="collection-item">Packet Source : {{ packet.sourceIp }}</li>
-      <li class="collection-item">
-        Packet Destination : {{ packet.destinationIp }}
-      </li>
-      <li class="collection-item">Packet Protocol : {{ packet.protocol }}</li>
-      <li class="collection-item">Packet length : {{ packet.length }}</li>
-      <li class="collection-item">Packet info : {{ packet.info }}</li>
-    </ul>
-    <!-- call button goBack on click -->
-    <button @click="goBack()" class="btn btn-danger">
-      Back
-    </button>
-    <!-- call button deletePacket on click -->
-    <button @click="deletePacket()" class="btn btn-danger">
-      Delete
-    </button>
-  </div>
+<!-- check whether id exists in the database -->
+<div id="view-packet" v-if="Object.keys(packet) != 0">
+  <ul class="collection with-header">
+    <li class="collection-header">Packet Name : {{ id }}</li>
+    <li class="collection-item">JSON : {{ packet }}</li>
+    <li class="collection-item">Created At : {{ packet.createdAt }}</li>
+    <li class="collection-item">Packet Source : {{ packet.sourceIp }}</li>
+    <li class="collection-item">
+      Packet Destination : {{ packet.destinationIp }}
+    </li>
+    <li class="collection-item">Packet Protocol : {{ packet.protocol }}</li>
+    <li class="collection-item">Packet length : {{ packet.length }}</li>
+    <li class="collection-item">Packet info : {{ packet.info }}</li>
+  </ul>
+  <!-- call button goBack on click -->
+  <button @click="goBack()" class="btn btn-danger">
+    Back
+  </button>
+  <!-- call button deletePacket on click -->
+  <button @click="deletePacket()" class="btn btn-danger">
+    Delete
+  </button>
+</div>
 </template>
 
 <script>
@@ -32,17 +32,17 @@ export default {
   name: 'view-packet',
   // pass the id as props
   props: ['id'],
-  data () {
+  data() {
     return {
       packet: {}
     }
   },
   methods: {
     // go back for back button
-    goBack () {
+    goBack() {
       this.$router.back()
     },
-    deletePacket () {
+    deletePacket() {
       // prompt user to confirm
       if (confirm('Confirm?')) {
         this.$store.dispatch('deletePacket', this.packet)
@@ -51,7 +51,7 @@ export default {
       }
     }
   },
-  created () {
+  created() {
     const uid = firebase.auth.currentUser.uid
     // bind packet to database info using VueFire
     if (uid != null) {

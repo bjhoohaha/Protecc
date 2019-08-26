@@ -13,15 +13,15 @@ uid = sys.argv[1]
 # e.g. options = ['-c 100', '-f tcp']
 options = []
 if(len(sys.argv) > 2):
-    options= sys.argv[2:]
+    options = sys.argv[2:]
 cred = credentials.Certificate("./serviceAccountKey.json")
 firebase_admin.initialize_app(cred, {
     'databaseURL': 'https://employee-manager-66213.firebaseio.com'
 })
 
 try:
-    sharkProcess = subprocess.Popen(['tshark'] + options,stdout=subprocess.PIPE,
-                                             stderr=subprocess.PIPE)
+    sharkProcess = subprocess.Popen(['tshark'] + options, stdout=subprocess.PIPE,
+                                    stderr=subprocess.PIPE)
     i = 0
     for packet in sharkProcess.stdout:
         # string is in binary, hence decode to utf-8
@@ -30,13 +30,13 @@ try:
         packetInfoArray = sharkStdOut.split()
         now = '{:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now())
         data = {
-           "createdAt": now,
-           "updatedAt": now,
-           "sourceIp": packetInfoArray[2],
-           "destinationIp": packetInfoArray[4],
-           "protocol": packetInfoArray[5],
-           "length": packetInfoArray[6],
-           "info": " ".join(packetInfoArray[7:])
+            "createdAt": now,
+            "updatedAt": now,
+            "sourceIp": packetInfoArray[2],
+            "destinationIp": packetInfoArray[4],
+            "protocol": packetInfoArray[5],
+            "length": packetInfoArray[6],
+            "info": " ".join(packetInfoArray[7:])
         }
         db.reference('users/' + uid + '/packets').push(data)
         i += 1

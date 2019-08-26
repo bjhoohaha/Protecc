@@ -95,7 +95,7 @@ const router = new Router({
       meta: {
         requiresAuth: true
       }
-    },,
+    }, ,
     // route to create new rule
     {
       path: '/create',

@@ -1,6 +1,11 @@
 <script>
-import { Bar, mixins } from 'vue-chartjs'
-const { reactiveProp } = mixins
+import {
+  Bar,
+  mixins
+} from 'vue-chartjs'
+const {
+  reactiveProp
+} = mixins
 
 export default {
   extends: Bar,
@@ -8,30 +13,28 @@ export default {
   // from parent component to be passed as prop
   mixins: [reactiveProp],
   name: 'BarChart',
-  data () {
+  data() {
     return {
       options: {
         responsive: true,
         maintainAspectRatio: true,
         scales: {
-          yAxes: [
-            {
-              ticks: { beginAtZero: true }
+          yAxes: [{
+            ticks: {
+              beginAtZero: true
             }
-          ],
-          xAxes: [
-            {
-              ticks: {
-                beginAtZero: true
-              }
+          }],
+          xAxes: [{
+            ticks: {
+              beginAtZero: true
             }
-          ]
+          }]
         }
       }
     }
   },
   options: {},
-  mounted () {
+  mounted() {
     // bind data to render the chart with props passed in
     this.renderChart(this.chartData, this.options)
   }

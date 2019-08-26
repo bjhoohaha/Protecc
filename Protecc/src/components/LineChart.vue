@@ -1,6 +1,11 @@
 <script>
-import { Line, mixins } from 'vue-chartjs'
-const { reactiveProp } = mixins
+import {
+  Line,
+  mixins
+} from 'vue-chartjs'
+const {
+  reactiveProp
+} = mixins
 
 export default {
   extends: Line,
@@ -8,37 +13,33 @@ export default {
   // from parent component to be passed as prop
   mixins: [reactiveProp],
   name: 'LineChart',
-  data () {
+  data() {
     return {
       options: {
         responsive: true,
         maintainAspectRatio: true,
         scales: {
-          yAxes: [
-            {
-              ticks: {
-                beginAtZero: true
-              }
+          yAxes: [{
+            ticks: {
+              beginAtZero: true
             }
-          ],
-          xAxes: [
-            {
-              // x axis as time
-              type: 'time',
-              time: {
-                unit: 'day'
-              },
-              ticks: {
-                beginAtZero: true,
-                display: false
-              }
+          }],
+          xAxes: [{
+            // x axis as time
+            type: 'time',
+            time: {
+              unit: 'day'
+            },
+            ticks: {
+              beginAtZero: true,
+              display: false
             }
-          ]
+          }]
         }
       }
     }
   },
-  mounted () {
+  mounted() {
     // bind data to render the chart with props passed in
     this.renderChart(this.chartData, this.options)
   }

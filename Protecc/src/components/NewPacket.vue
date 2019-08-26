@@ -1,51 +1,33 @@
 <template>
-  <div id="new-packet">
-    <!-- Error message if unable to connect to express router -->
-    <v-dialog :value="dialog">
-      <v-card>
-        <v-toolbar>
-          <v-card-title id="title">
-            <strong> ERROR {{ error }} </strong>
-          </v-card-title>
-        </v-toolbar>
-        <v-alert id="message" :value="true" color="blue-grey lighten-2">
-          {{ message }}
-        </v-alert>
-        <img id="bear-logo" src="../assets/error-display.png" />
-      </v-card>
-    </v-dialog>
+<div id="new-packet">
+  <!-- Error message if unable to connect to express router -->
+  <v-dialog :value="dialog">
+    <v-card>
+      <v-toolbar>
+        <v-card-title id="title">
+          <strong> ERROR {{ error }} </strong>
+        </v-card-title>
+      </v-toolbar>
+      <v-alert id="message" :value="true" color="blue-grey lighten-2">
+        {{ message }}
+      </v-alert>
+      <img id="bear-logo" src="../assets/error-display.png" />
+    </v-card>
+  </v-dialog>
+  <!-- allow start /stop capture only after settings are initialized -->
+  <div v-if="ready">
     <!-- start capture button -->
-    <!-- allow start /stop capture only after settings are initialized -->
-    <div v-if="ready">
-      <v-btn
-        v-if="capture"
-        @click="runTshark"
-        fab
-        right
-        bottom
-        fixed
-        rounded
-        color="green darken-1"
-      >
-        START
-      </v-btn>
-      <!-- stop capture button -->
-      <v-btn
-        v-else
-        @click="killTshark"
-        fab
-        right
-        :value="false"
-        large
-        bottom
-        fixed
-        rounded
-        color="red darken-1"
-      >
-        STOP
-      </v-btn>
-    </div>
+    <v-btn v-if="getCaptureStatus" @click="toggleCapture" fab right bottom fixed
+        rounded color="green darken-1">
+      START
+    </v-btn>
+    <!-- stop capture button -->
+    <v-btn v-else @click="toggleCapture" fab right large bottom fixed rounded
+        color="red darken-1">
+      STOP
+    </v-btn>
   </div>
+</div>
 </template>
 
 <script>
@@ -58,15 +40,13 @@ const db = firebase.db
 
 export default {
   name: 'new-packet',
-  data () {
+  data() {
     return {
       // toggle dialog overlay true or false
       dialog: false,
       // error message
       message: '',
       error: '',
-      // toggle start / stop capture
-      capture: 'false',
       settings: {},
       rules: {},
       // allow start / stop capture when ready
@@ -74,9 +54,14 @@ export default {
     }
   },
   computed: {
+    // get previous / saved capture status from store (if user refresh page)
+    // used to toggle run / stop tshark
+    getCaptureStatus() {
+      return this.$store.getters.getCaptureStatus
+    },
     // tshark allow users to indicate capture packet count with '-c'
     // turn user's settings to arguments for tshark
-    getCountOption () {
+    getCountOption() {
       if (this.settings) {
         const infinite = this.settings['infinite']
         if (infinite != null && infinite['active'] == false) {
@@ -87,7 +72,7 @@ export default {
     },
     // tshark allow users to configure their own capture filter
     // turn user's rules to arguments for tshark
-    getFilterOptions () {
+    getFilterOptions() {
       const filter = Object.values(this.rules)
         .map(rule => {
           return rule.filter
@@ -104,10 +89,14 @@ export default {
     }
   },
   methods: {
-    // POST request to start logging packet
-    runTshark () {
-      this.dialog = false
-      this.capture = !this.capture
+    // toggle capture' status in Vuex Store
+    // this will determine whether start / stop is display during a page refresh
+    toggleCapture() {
+      this.$store.commit('toggleCapture')
+    },
+    runTshark() {
+      // show loading animation
+      this.$store.commit('showLoadingOverlay')
       const uid = this.$store.getters.getUID
       // use axios to submit a POST request
       return axios
@@ -122,11 +111,10 @@ export default {
           },
           err => {
             console.log(err.response)
-            this.capture = !this.capture
             this.dialog = true
             const status = err.request.status
-            this.error =
-              '' + err.request.status + ' : ' + err.request.statusText
+            this.error = '' + err.rquest.status
+            // '' + err.request.status + ' : ' + err.request.statusText
             if (status == 400) {
               this.message =
                 'tshark was spawned but unable to capture because of invalid arguments. Please check your rules again.'
@@ -139,11 +127,9 @@ export default {
           }
         )
     },
-    // DELETE request to kill logging process
-    killTshark () {
-      this.capture = !this.capture
+    killTshark() {
       // use axios to send a delete request
-      return axios.delete(url).then(
+      axios.delete(url).then(
         result => {
           this.message = 'killed'
           console.log(result)
@@ -154,7 +140,7 @@ export default {
       )
     }
   },
-  created () {
+  created() {
     const uid = this.$store.getters.getUID
     const self = this
     db.ref('users/' + uid + '/settings')
@@ -174,8 +160,16 @@ export default {
   watch: {
     // Watch for changes in settings
     // Allow packet capture when settings finish initialize
-    settings: function () {
+    settings: function() {
       this.ready = true
+    },
+    // the capture status will determine what will be run
+    getCaptureStatus: function(captureStatus) {
+      if (!this.$store.getters.getCaptureStatus) {
+        this.runTshark()
+      } else {
+        this.killTshark()
+      }
     }
   }
 }

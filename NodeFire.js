@@ -23,14 +23,16 @@ never gets returned.
 
 // initialise with ADMIN priviledges
 const admin = require("firebase-admin");
-const { spawn } = require("child_process");
+const {
+    spawn
+} = require("child_process");
 // path to service account key JSON
 const serviceAccount = require("./serviceAccountKey.json");
 
 // initialize with ADMIN API
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://employee-manager-66213.firebaseio.com"
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: "https://employee-manager-66213.firebaseio.com"
 });
 
 const db = admin.database();
@@ -40,41 +42,42 @@ const ref = db.ref("packetsTest");
 const tshark = spawn("tshark", ["-l", "-c 15"]);
 let i = 1;
 tshark.stdout.on("data", data => {
-  data
-    .toString()
-    // split by new line
-    .split("\n")
-    .filter(str => str.length > 0)
-    .map(str => {
-      // split by whitespace
-      const arr = str.split(/(\s+)/).filter(str => str.trim().length > 0);
-      const data = {
-        createdAt: new Date()
-          .toISOString()
-          .replace(/T/, " ")
-          .replace(/\..+/, ""),
-        updatedAt: new Date()
-          .toISOString()
-          .replace(/T/, " ")
-          .replace(/\..+/, ""),
-        sourceIp: arr[2],
-        destinationIp: arr[4],
-        protocol: arr[5],
-        length: arr[6],
-        info: arr.slice(7).join(" ")
-      };
-      // push data to firebase
-      ref.push(data, function(error) {
-        if (error) {
-          console.log(error);
-        } else {
-          console.log(i + " packets added");
-          i++;
-        }
-      });
-      tshark.on("SIGINT", function() {
-        tshark.exit();
-        console.log("tshark exits.");
-      });
-    });
+    data
+        .toString()
+        // split by new line
+        .split("\n")
+        .filter(str => str.length > 0)
+        .map(str => {
+            // split by whitespace
+            const arr = str.split(/(\s+)/).filter(str => str.trim()
+                .length > 0);
+            const data = {
+                createdAt: new Date()
+                    .toISOString()
+                    .replace(/T/, " ")
+                    .replace(/\..+/, ""),
+                updatedAt: new Date()
+                    .toISOString()
+                    .replace(/T/, " ")
+                    .replace(/\..+/, ""),
+                sourceIp: arr[2],
+                destinationIp: arr[4],
+                protocol: arr[5],
+                length: arr[6],
+                info: arr.slice(7).join(" ")
+            };
+            // push data to firebase
+            ref.push(data, function(error) {
+                if (error) {
+                    console.log(error);
+                } else {
+                    console.log(i + " packets added");
+                    i++;
+                }
+            });
+            tshark.on("SIGINT", function() {
+                tshark.exit();
+                console.log("tshark exits.");
+            });
+        });
 });
