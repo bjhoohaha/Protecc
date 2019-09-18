@@ -3,7 +3,7 @@
 
 Protecc is a simple Graphic User Interface running over wireshark packet logger. 
 It can be installed and run on any internet browser. Using Protecc, allows the user
-to live capture packets in **REALTIME**. The Vue front end automically renders the packet
+to live capture packets in **REALTIME**. The Vue front end automatically renders the packet
 statistics live from firebase and render it in **REALTIME** on the user display.
 
 ## Dependencies:
